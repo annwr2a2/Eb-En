@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة طاقة الربط النووي التفاعلية - الأستاذ أنور البلوشي</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        h1 {
+            color: #b91c1c;
+            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .subtitle {
+            color: #475569;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid #cbd5e1;
+        }
+        
+        .audio-guide-panel {
+            background: #eff6ff;
+            border: 2px solid #2563eb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: right;
+        }
+        .audio-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .audio-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .audio-btn.playing {
+            background-color: #dc2626;
+        }
+
+        .panel {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        .panel-title {
+            color: #0f172a;
+            font-size: 18px;
+            margin-top: 0;
+            border-bottom: 2px solid #b91c1c;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #334155;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fff;
+            font-weight: bold;
+            color: #0f172a;
+        }
+        
+        .component-badge {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-weight: bold;
+        }
+        .component-badge .number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .isotope-display {
+            font-size: 55px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #0f172a;
+            text-align: center;
+            margin: 15px 0;
+            direction: ltr;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            width: 180px;
+            margin: 15px auto;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .isotope-box {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding-left: 40px;
+            font-weight: bold;
+        }
+        .isotope-inline {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding-left: 24px;
+            font-size: 22px;
+            color: #b91c1c;
+            font-family: 'Courier New', Courier, monospace;
+            vertical-align: middle;
+            margin: 0 5px;
+        }
+        .nuclear-numbers {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            font-size: 20px;
+            line-height: 1.1;
+            position: absolute;
+            left: 0;
+            width: 35px;
+            font-weight: bold;
+            color: #b91c1c;
+        }
+        .nuclear-numbers-inline {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            font-size: 11px;
+            line-height: 1.0;
+            position: absolute;
+            left: 0;
+            width: 20px;
+            font-weight: bold;
+            color: #b91c1c;
+        }
+        
+        canvas {
+            background: #ffffff;
+            border: 2px solid #94a3b8;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #ffffff;
+            font-weight: bold;
+        }
+        .results-table th, .results-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .results-table th {
+            background-color: #e2e2e2;
+            color: #b91c1c;
+            font-weight: bold;
+        }
+        .highlight-blue { color: #2563eb; font-weight: bold; }
+        .highlight-purple { color: #7c3aed; font-weight: bold; }
+        .highlight-orange { color: #ea580c; font-weight: bold; }
+        .highlight-green { color: #16a34a; font-weight: bold; }
+        
+        .quiz-container {
+            background: #fff;
+            border: 2px solid #b91c1c;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .quiz-block {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .quiz-question {
+            font-size: 17px;
+            color: #0f172a;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 8px;
+            line-height: 1.6;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #1e293b;
+        }
+        .option-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+        .option-btn.selected-correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+        }
+        .option-btn.selected-wrong {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #7f1d1d;
+        }
+        .quiz-feedback {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 25px;
+        }
+        
+        /* تنسيق زر توليد أسئلة جديدة المضاف */
+        .refresh-quiz-btn {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .refresh-quiz-btn:hover {
+            background-color: #15803d;
+        }
+        
+        .credits {
+            margin-top: 25px;
+            padding: 15px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f172a;
+            border: 1px dashed #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>حاسبة طاقة الربط النووي التفاعلية وموقع النواة بالمخطط</h1>
+    <p class="subtitle">نسخة مطورة تفاعلية للمناهج العمانية - مادة الفيزياء</p>
+    
+    <div class="audio-guide-panel">
+        <div>
+            <div style="color: #1e3a8a; font-size: 16px; margin-bottom: 4px;">🔊 <strong>دليل الشرح الصوتي الواقعي المطوّر:</strong></div>
+            <div style="color: #4b5563; font-size: 13px; font-weight: normal;">تم تحسين الصوت فيزيائياً ليعطي نبرة محادثة طبيعية مريحة وأقل روبوتية أثناء الشرح.</div>
+        </div>
+        <button id="audioGuideBtn" class="audio-btn">
+            <span>▶️ استمع للشرح المطور</span>
+        </button>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">أولاً: اختر النواة المراد دراستها من القائمة</div>
+        <div class="form-group">
+            <select id="presetSelect"></select>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">ثانياً: الرمز الكيميائي والصيغة النووية الصحيحة</div>
+        <div class="isotope-display" id="isotopeDisplay">-</div>
+        
+        <h3 style="color: #475569; text-align: center; margin-top: 25px; margin-bottom: 10px; font-weight: bold;">المكونات الأساسية للنواة والكتلة الفعلية:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+            <div class="component-badge">
+                <label>عدد البروتونات (Z)</label>
+                <div id="badgeZ" class="number highlight-blue">-</div>
+            </div>
+            <div class="component-badge">
+                <label>عدد النيوترونات (N)</label>
+                <div id="badgeN" class="number highlight-purple">-</div>
+            </div>
+            <div class="component-badge">
+                <label>كتلة النواة الفعلية (u)</label>
+                <div id="badgeMass" class="number highlight-orange" style="font-size: 20px;">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">ثالثاً: موقع النواة على منحنى طاقة الربط لكل نيوكليون (MeV)</div>
+        <canvas id="graphCanvas" width="850" height="400"></canvas>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">رابعاً: خطوات الحسابات الفيزيائية الدقيقة للربط النووي</div>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>الخطوة الفيزيائية</th>
+                    <th>طريقة الحساب الرياضية</th>
+                    <th>النتيجة والقيمة الدقيقة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>كتلة المكونات وهي حرة (متفرقة)</td>
+                    <td>(Z &times; m<sub>p</sub>) + (N &times; m<sub>n</sub>)</td>
+                    <td id="resConstituentsMass">-</td>
+                </tr>
+                <tr>
+                    <td>النقص في الكتلة (&Delta;m)</td>
+                    <td>كتلة المكونات حرة - كتلة النواة الفعلية</td>
+                    <td id="resMassDefect" class="highlight-orange">-</td>
+                </tr>
+                <tr>
+                    <td>طاقة الربط النووي الإجمالية (E<sub>b</sub>)</td>
+                    <td>E<sub>b</sub> = &Delta;m &times; 931.5 MeV</td>
+                    <td id="resEbMeV" class="highlight-green">-</td>
+                </tr>
+                <tr>
+                    <td>طاقة الربط النووي الإجمالية بالجول (J)</td>
+                    <td>E<sub>b</sub>(MeV) &times; 1.60218 &times; 10<sup>-13</sup></td>
+                    <td id="resEbJoules" style="direction: ltr;">-</td>
+                </tr>
+                <tr>
+                    <td>طاقة الربط النووي لكل نيوكليون (E<sub>b</sub> / A)</td>
+                    <td>طاقة الربط الإجمالية &divide; العدد الكتلي A</td>
+                    <td id="resEbPerA" style="font-size: 18px; font-weight: bold; color: #b91c1c;">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">خامساً: النشاط التقييمي الصفي (اضغط بالأسفل لتوليد أسئلة عشوائية مختلفة وجديدة تماماً)</div>
+        <div class="quiz-container">
+            
+            <div class="quiz-block">
+                <div class="quiz-question" id="q1Text">جاري إعداد صيغة السؤال الأول...</div>
+                <div class="quiz-options" id="q1Options"></div>
+            </div>
+            
+            <div class="quiz-block">
+                <div class="quiz-question" id="q2Text">جاري إعداد صيغة السؤال الثاني...</div>
+                <div class="quiz-options" id="q2Options"></div>
+            </div>
+            
+            <div class="quiz-feedback" id="quizFeedback"></div>
+            
+            <button id="refreshQuizBtn" class="refresh-quiz-btn">🔄 توليد أسئلة عشوائية جديدة</button>
+        </div>
+    </div>
+
+    <div class="credits">
+        👨‍🏫 عمل الأستاذ: أنور البلوشي | 📱 هاتف: 92818606 | مادة الفيزياء - سلطنة عمان
+    </div>
+</div>
+
+<script>
+const presetSelect = document.getElementById('presetSelect');
+const canvas = document.getElementById('graphCanvas');
+const ctx = canvas.getContext('2d');
+const audioGuideBtn = document.getElementById('audioGuideBtn');
+const refreshQuizBtn = document.getElementById('refreshQuizBtn');
+
+const mp = 1.007276;
+const mn = 1.008665;
+
+let isPlayingGuide = false;
+let speechQueue = [];
+let currentQueueIndex = 0;
+
+const isotopesData = [
+    {z:1, a:2, m:2.013553, s:"H", name:"الهيدروجين-2"},
+    {z:1, a:3, m:3.016049, s:"H", name:"الهيدروجين-3"},
+    {z:2, a:3, m:3.016029, s:"He", name:"الهيليوم-3"},
+    {z:2, a:4, m:4.002603, s:"He", name:"الهيليوم-4"},
+    {z:3, a:6, m:6.015122, s:"Li", name:"الليثيوم-6"},
+    {z:3, a:7, m:7.016004, s:"Li", name:"الليثيوم-7"},
+    {z:4, a:9, m:9.012182, s:"Be", name:"البريليوم-9"},
+    {z:5, a:10, m:10.012937, s:"B", name:"البورون-10"},
+    {z:5, a:11, m:11.009305, s:"B", name:"البورون-11"},
+    {z:6, a:12, m:12.000000, s:"C", name:"الكربون-12"},
+    {z:6, a:13, m:13.003355, s:"C", name:"الكربون-13"},
+    {z:6, a:14, m:14.003241, s:"C", name:"الكربون-14"},
+    {z:7, a:14, m:14.003074, s:"N", name:"النيتروجين-14"},
+    {z:7, a:15, m:15.000108, s:"N", name:"النيتروجين-15"},
+    {z:8, a:16, m:15.994915, s:"O", name:"الأكسجين-16"},
+    {z:8, a:17, m:16.999131, s:"O", name:"الأكسجين-17"},
+    {z:8, a:18, m:17.999160, s:"O", name:"الأكسجين-18"},
+    {z:9, a:19, m:18.998403, s:"F", name:"الفلور-19"},
+    {z:10, a:20, m:19.992440, s:"Ne", name:"النيون-20"},
+    {z:26, a:56, m:55.934937, s:"Fe", name:"الحديد-56"},
+    {z:36, a:92, m:91.926156, s:"Kr", name:"الكربتون-92"},
+    {z:38, a:88, m:87.905612, s:"Sr", name:"السترونشيوم-88"},
+    {z:56, a:138, m:137.905247, s:"Ba", name:"الباريوم-138"},
+    {z:92, a:235, m:235.043929, s:"U", name:"اليورانيوم-235"},
+    {z:92, a:238, m:238.050788, s:"U", name:"اليورانيوم-238"}
+];
+
+let q1CorrectAnswer = null;
+let q2CorrectAnswer = null;
+let q1Selected = null;
+let q2Selected = null;
+
+function populateSelect() {
+    presetSelect.innerHTML = "";
+    isotopesData.forEach((iso, index) => {
+        let opt = document.createElement('option');
+        opt.value = index;
+        opt.text = `${iso.name} [${iso.s}]`;
+        if(iso.z === 26 && iso.a === 56) opt.selected = true;
+        presetSelect.appendChild(opt);
+    });
+}
+
+function speakNaturalConversation(paragraphs) {
+    window.speechSynthesis.cancel(); 
+    speechQueue = paragraphs;
+    currentQueueIndex = 0;
+    playNextInQueue();
+}
+
+function playNextInQueue() {
+    if (currentQueueIndex >= speechQueue.length) {
+        isPlayingGuide = false;
+        audioGuideBtn.innerHTML = "<span>▶️ استمع للشرح المطور</span>";
+        audioGuideBtn.className = "audio-btn";
+        return;
+    }
+
+    let text = speechQueue[currentQueueIndex];
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ar-SA';
+    utterance.pitch = 0.70; 
+    utterance.rate = 0.88;  
+
+    utterance.onend = () => {
+        currentQueueIndex++;
+        setTimeout(playNextInQueue, 400); 
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
+function sayFeedbackNatural(text) {
+    try {
+        let u = new SpeechSynthesisUtterance(text);
+        u.lang = 'ar-SA';
+        u.pitch = 0.70;
+        u.rate = 0.92;
+        window.speechSynthesis.speak(u);
+    } catch(e){}
+}
+
+function playClapEffect() {
+    try {
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                let osc = audioCtx.createGain();
+                let node = audioCtx.createOscillator();
+                node.type = 'triangle';
+                node.frequency.setValueAtTime(130 + Math.random()*70, audioCtx.currentTime);
+                node.connect(osc);
+                osc.connect(audioCtx.destination);
+                osc.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                osc.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.08);
+                node.start();
+                node.stop(audioCtx.currentTime + 0.08);
+            }, i * 60);
+        }
+    } catch(e){}
+}
+
+function createInlineIsotopeHTML(A, Z, symbol) {
+    return `<span class="isotope-inline"><span class="nuclear-numbers-inline"><span>${A}</span><span>${Z}</span></span>${symbol}</span>`;
+}
+
+function calculateAndDraw() {
+    const selectedIndex = presetSelect.value;
+    const iso = isotopesData[selectedIndex];
+    
+    let n = iso.a - iso.z; 
+    
+    document.getElementById('badgeZ').innerText = iso.z;
+    document.getElementById('badgeN').innerText = n;
+    document.getElementById('badgeMass').innerText = iso.m.toFixed(6);
+    
+    let mConstituents = (iso.z * mp) + (n * mn); 
+    let deltaM = mConstituents - iso.m; 
+    if (deltaM < 0) deltaM = 0; 
+    
+    let eb = deltaM * 931.5; 
+    let ebJoules = eb * 1.60218e-13; 
+    let ebPerA = eb / iso.a; 
+    
+    document.getElementById('isotopeDisplay').innerHTML = `
+        <span class="isotope-box">
+            <span class="nuclear-numbers">
+                <span>${iso.a}</span>
+                <span>${iso.z}</span>
+            </span>
+            ${iso.s}
+        </span>
+    `;
+    
+    document.getElementById('resConstituentsMass').innerText = mConstituents.toFixed(6) + " u";
+    document.getElementById('resMassDefect').innerText = deltaM.toFixed(6) + " u";
+    document.getElementById('resEbMeV').innerText = eb.toFixed(4) + " MeV";
+    document.getElementById('resEbJoules').innerText = ebJoules.toExponential(5) + " J";
+    document.getElementById('resEbPerA').innerText = ebPerA.toFixed(4) + " MeV / nucleon";
+    
+    drawGraph(iso.a, ebPerA, iso.s);
+    buildCompletelyRandomQuiz(selectedIndex); 
+}
+
+function buildCompletelyRandomQuiz(currentDeviceIndex) {
+    q1Selected = null;
+    q2Selected = null;
+    document.getElementById('quizFeedback').innerText = "";
+
+    let idx1 = Math.floor(Math.random() * isotopesData.length);
+    if(idx1 == currentDeviceIndex) idx1 = (idx1 + 3) % isotopesData.length;
+    const randomIso1 = isotopesData[idx1];
+    
+    let n1 = randomIso1.a - randomIso1.z;
+    let trueEb1 = ((randomIso1.z * mp) + (n1 * mn) - randomIso1.m) * 931.5;
+    if(trueEb1 < 0) trueEb1 = 0;
+    
+    q1CorrectAnswer = trueEb1.toFixed(2);
+    
+    let inlineIsotope1 = createInlineIsotopeHTML(randomIso1.a, randomIso1.z, randomIso1.s);
+    document.getElementById('q1Text').innerHTML = `❓ <strong>السؤال الأول:</strong> إذا علمت أن الكتلة الفعلية لنواة النظير ${inlineIsotope1} تساوي <strong>${randomIso1.m.toFixed(6)} u</strong>، احسب قيمة <strong>طاقة الربط النووي الإجمالية (E<sub>b</sub>)</strong> لها بوحدة (MeV)؟`;
+    
+    let q1Options = [
+        q1CorrectAnswer,
+        (trueEb1 + 24.4).toFixed(2),
+        (trueEb1 - 19.2).toFixed(2),
+        (trueEb1 * 0.75).toFixed(2)
+    ].sort(() => Math.random() - 0.5);
+
+    const q1Container = document.getElementById('q1Options');
+    q1Container.innerHTML = "";
+    q1Options.forEach(opt => {
+        let btn = document.createElement('button');
+        btn.className = "option-btn";
+        btn.innerText = opt + " MeV";
+        btn.addEventListener('click', () => {
+            Array.from(q1Container.children).forEach(b => b.className = "option-btn");
+            q1Selected = opt;
+            if(opt === q1CorrectAnswer) btn.className = "option-btn selected-correct";
+            else btn.className = "option-btn selected-wrong";
+            evaluateSingleQuestion(opt, q1CorrectAnswer);
+        });
+        q1Container.appendChild(btn);
+    });
+
+    let idx2 = Math.floor(Math.random() * isotopesData.length);
+    if(idx2 == currentDeviceIndex || idx2 == idx1) idx2 = (idx2 + 4) % isotopesData.length;
+    const randomIso2 = isotopesData[idx2];
+    
+    let n2 = randomIso2.a - randomIso2.z;
+    let trueEb2 = ((randomIso2.z * mp) + (n2 * mn) - randomIso2.m) * 931.5;
+    let trueEbPerA2 = trueEb2 / randomIso2.a;
+    if(trueEbPerA2 < 0) trueEbPerA2 = 0;
+
+    q2CorrectAnswer = trueEbPerA2.toFixed(2);
+    
+    let inlineIsotope2 = createInlineIsotopeHTML(randomIso2.a, randomIso2.z, randomIso2.s);
+    document.getElementById('q2Text').innerHTML = `❓ <strong>السؤال الثاني:</strong> إذا علمت أن طاقة الربط النووي الكلية لنواة ${inlineIsotope2} تساوي <strong>${trueEb2.toFixed(4)} MeV</strong>، أوجد <strong>طاقة الربط لكل نيوكليون</strong> لها؟`;
+    
+    let q2Options = [
+        q2CorrectAnswer,
+        (trueEbPerA2 + 1.35).toFixed(2),
+        (trueEbPerA2 - 0.75).toFixed(2),
+        (trueEbPerA2 * 0.6).toFixed(2)
+    ].sort(() => Math.random() - 0.5);
+
+    const q2Container = document.getElementById('q2Options');
+    q2Container.innerHTML = "";
+    q2Options.forEach(opt => {
+        let btn = document.createElement('button');
+        btn.className = "option-btn";
+        btn.innerText = opt + " MeV/nucleon";
+        btn.addEventListener('click', () => {
+            Array.from(q2Container.children).forEach(b => b.className = "option-btn");
+            q2Selected = opt;
+            if(opt === q2CorrectAnswer) btn.className = "option-btn selected-correct";
+            else btn.className = "option-btn selected-wrong";
+            evaluateSingleQuestion(opt, q2CorrectAnswer);
+        });
+        q2Container.appendChild(btn);
+    });
+}
+
+function evaluateSingleQuestion(selected, correct) {
+    const feedback = document.getElementById('quizFeedback');
+    if (selected === correct) {
+        feedback.innerText = "👏 برافو! إجابة صحيحة وممتازة.";
+        feedback.style.color = "#16a34a";
+        playClapEffect();
+        setTimeout(() => { sayFeedbackNatural("برافو! إجابة صحيحة"); }, 200);
+    } else {
+        feedback.innerText = "❌ حاول من جديد! راجع الحسابات بدقة.";
+        feedback.style.color = "#dc2626";
+        setTimeout(() => { sayFeedbackNatural("حاول من جديد"); }, 200);
+    }
+}
+
+function drawGraph(currentA, currentEbPerA, currentSymbol) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const padding = 60;
+    const graphWidth = canvas.width - padding * 2;
+    const graphHeight = canvas.height - padding * 2;
+    
+    function getX(aValue) { return padding + (aValue / 260) * graphWidth; }
+    function getY(ebValue) { return canvas.height - padding - (ebValue / 10) * graphHeight; }
+    
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    for(let i=20; i<=260; i+=20) {
+        ctx.beginPath(); ctx.moveTo(getX(i), getY(0)); ctx.lineTo(getX(i), getY(10)); ctx.stroke();
+    }
+    for(let j=1; j<=10; j++) {
+        ctx.beginPath(); ctx.moveTo(getX(0), getY(j)); ctx.lineTo(getX(260), getY(j)); ctx.stroke();
+    }
+    
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(padding, padding - 10);
+    ctx.lineTo(padding, canvas.height - padding);
+    ctx.lineTo(canvas.width - padding + 10, canvas.height - padding);
+    ctx.stroke();
+    
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 13px Arial"; 
+    ctx.textAlign = "center";
+    ctx.fillText("عدد النيوكليونات (العدد الكتلي A)", canvas.width/2, canvas.height - 15);
+    
+    ctx.save();
+    ctx.translate(20, canvas.height/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("طاقة الربط لكل نيوكليون (MeV)", 0, 0);
+    ctx.restore();
+    
+    ctx.font = "bold 11px Arial"; 
+    ctx.fillStyle = "#64748b";
+    for(let i=0; i<=240; i+=40) {
+        ctx.fillText(i, getX(i), canvas.height - padding + 18);
+    }
+    ctx.textAlign = "right";
+    for(let j=0; j<=10; j+=2) {
+        ctx.fillText(j, padding - 10, getY(j) + 4);
+    }
+    
+    const curvePoints = [
+        {a: 0, e: 0}, {a: 2, e: 1.11}, {a: 3, e: 2.57}, {a: 4, e: 7.07},
+        {a: 6, e: 5.3}, {a: 12, e: 7.68}, {a: 16, e: 7.98}, {a: 40, e: 8.55},
+        {a: 56, e: 8.8}, {a: 100, e: 8.6}, {a: 150, e: 8.3}, {a: 200, e: 7.8},
+        {a: 238, e: 7.6}, {a: 260, e: 7.4}
+    ];
+    
+    ctx.strokeStyle = "#0284c7";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(getX(curvePoints[0].a), getY(curvePoints[0].e));
+    for (let i = 1; i < curvePoints.length; i++) {
+        ctx.lineTo(getX(curvePoints[i].a), getY(curvePoints[i].e));
+    }
+    ctx.stroke();
+    
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 1.5;
+    ctx.font = "bold italic 11px Arial"; 
+    ctx.fillStyle = "#0f172a";
+    
+    ctx.beginPath();
+    ctx.moveTo(getX(10), getY(3)); ctx.lineTo(getX(15), getY(5.5));
+    ctx.stroke();
+    ctx.fillText("اندماج ↑", getX(22), getY(3.5));
+    
+    ctx.beginPath();
+    ctx.moveTo(getX(220), getY(7.65)); ctx.lineTo(getX(130), getY(8.2));
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(getX(130), getY(8.2)); ctx.lineTo(getX(136), getY(8.0));
+    ctx.moveTo(getX(130), getY(8.2)); ctx.lineTo(getX(136), getY(8.4));
+    ctx.stroke();
+    ctx.fillText("← انشطار", getX(180), getY(7.5));
+
+    if (currentA > 0 && currentEbPerA >= 0) {
+        let posX = getX(currentA);
+        let posY = getY(currentEbPerA);
+        
+        ctx.beginPath();
+        ctx.arc(posX, posY, 12, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220, 38, 38, 0.25)";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(posX, posY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#dc2626";
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        
+        ctx.fillStyle = "#b91c1c";
+        ctx.font = "bold 14px Arial"; 
+        ctx.textAlign = "left";
+        ctx.fillText(` ${currentSymbol}-${currentA} (${currentEbPerA.toFixed(2)})`, posX + 8, posY - 8);
+    }
+}
+
+audioGuideBtn.addEventListener('click', () => {
+    if(!isPlayingGuide) {
+        isPlayingGuide = true;
+        audioGuideBtn.innerHTML = "<span>🛑 إيقاف الشرح الصوتي</span>";
+        audioGuideBtn.className = "audio-btn playing";
+        
+        const paragraphs = [
+            "مرحباً بكم يا شباب.. في مختبر الفيزياء التفاعلي للأستاذ أنور البلوشي.",
+            "اليوم.. سنتحدث عن مفهوم جوهري في الاستقرار النووي.. وهو منحنى طاقة الربط لكل نيوكليون.",
+            "بمجرد اختياركم لأي نواة من القائمة.. ستلاحظون تفكيك مكوناتها من بروتونات ونيوترونات أسفل الرمز مباشرة.",
+            "وسيقوم التطبيق.. بإسقاط موقعها كعلامة حمراء مميزة على المنحنى البياني.",
+            "تذكروا القاعدة دائماً.. الأنوية الخفيفة في يسار المخطط تميل للاندماج لتصبح أكثر ترابطاً.. بينما الأنوية الثقيلة في اليمين تميل للإنشطار.",
+            "وتظل نواة الحديد ستة وخمسين.. هي النواة الأكثر استقراراً في الطبيعة.",
+            "الآن.. خذوا دقيقة لتأمل الحسابات.. ثم اختبروا أنفسكم في أسئلة التحدي بالأسفل.. وبالتوفيق لكم جميعاً."
+        ];
+        
+        speakNaturalConversation(paragraphs);
+    } else {
+        isPlayingGuide = false;
+        window.speechSynthesis.cancel();
+        audioGuideBtn.innerHTML = "<span>▶️ استمع للشرح المطور</span>";
+        audioGuideBtn.className = "audio-btn";
+    }
+});
+
+// تفعيل عمل زر التحديث لتوليد أسئلة عشوائية جديدة عند الضغط عليه
+refreshQuizBtn.addEventListener('click', () => {
+    const selectedIndex = presetSelect.value;
+    buildCompletelyRandomQuiz(selectedIndex);
+    // نغمة خفيفة تفيد بتحديث الأسئلة بنجاح
+    try {
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.frequency.value = 587.33; // نغمة ناعمة
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+    } catch(e){}
+});
+
+presetSelect.addEventListener('change', () => {
+    calculateAndDraw();
+});
+
+window.addEventListener('load', () => {
+    populateSelect();
+    calculateAndDraw();
+});
+</script>
+
+</body>
+</html>
