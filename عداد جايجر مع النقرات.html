@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكاة تجربة عمر النصف - إعداد الأستاذ أنور البلوشي</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            color: #004085;
+            margin-bottom: 5px;
+        }
+        .teacher-badge {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #0056b3;
+            margin-bottom: 25px;
+            background: #e2e3e5;
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 20px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .workspace {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        .panel {
+            flex: 1;
+            min-width: 320px;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        /* منطقة المختبر والتحريك */
+        .lab-area {
+            height: 380px;
+            background: #e9ecef;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed #ced4da;
+            margin-bottom: 15px;
+        }
+        /* القنينة */
+        .bottle {
+            width: 85px;
+            height: 210px;
+            border: 3px solid #212529;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            overflow: hidden;
+            background: #fff;
+        }
+        .top-layer {
+            height: 40%;
+            background: rgba(0, 123, 255, 0.25);
+            transition: background 0.4s ease;
+        }
+        .active-radiation {
+            background: rgba(220, 53, 69, 0.7) !important;
+        }
+        .bottom-layer {
+            height: 60%;
+            background: rgba(40, 167, 69, 0.6);
+        }
+        /* مسبار العداد */
+        .geiger-probe {
+            width: 45px;
+            height: 95px;
+            background: #495057;
+            border-radius: 5px;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            cursor: move;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.25);
+            z-index: 10;
+            border: 2px solid #343a40;
+        }
+        .geiger-probe::after {
+            content: "مسبار GM";
+            color: #fff;
+            font-size: 11px;
+            position: absolute;
+            bottom: 8px;
+            width: 100%;
+            text-align: center;
+        }
+        .counter-display {
+            background: #212529;
+            color: #28a745;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 26px;
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-shake { background-color: #fd7e14; }
+        .btn-start { background-color: #28a745; }
+        .btn-reset { background-color: #6c757d; }
+        .btn:disabled { background-color: #6c757d; opacity: 0.5; cursor: not-allowed; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th { background-color: #004085; color: white; }
+        
+        /* تذييل الصفحة وبيانات المعلم */
+        .footer-credits {
+            margin-top: 40px;
+            padding: 20px;
+            background: #e9ecef;
+            border-top: 4px solid #004085;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .footer-credits h3 {
+            margin: 0 0 8px 0;
+            color: #004085;
+        }
+        .footer-credits p {
+            margin: 5px 0;
+            font-size: 15px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>المختبر الافتراضي التفاعلي: قياس عمر النصف ($^{234}\text{Pa}$)</h1>
+    <div class="teacher-badge">إعداد الأستاذ: أنور البلوشي</div>
+
+    <div class="workspace">
+        <div class="panel" style="flex: 1.2;">
+            <div class="counter-display" id="counterScreen">العداد: 000 cpm</div>
+            
+            <div class="lab-area" id="labArea">
+                <div class="geiger-probe" id="geigerProbe"></div>
+                <div class="bottle" id="bottle">
+                    <div class="top-layer" id="topLayer"></div>
+                    <div class="bottom-layer"></div>
+                </div>
+            </div>
+            
+            <button class="btn btn-shake" id="shakeBtn">1. رجّ القنينة لفصل النظير المشع</button>
+            <button class="btn btn-start" id="startBtn" disabled>2. بدء التسجيل التلقائي (كل 10 ثوانٍ)</button>
+            <button class="btn btn-reset" id="resetBtn">إعادة تعيين المختبر</button>
+        </div>
+
+        <div class="panel">
+            <canvas id="decayChart" style="max-height: 260px;"></canvas>
+            
+            <div style="margin-top: 15px; background: #fff3cd; border: 1px solid #ffeeba; padding: 12px; border-radius: 6px;">
+                <strong>حساب عمر النصف المستنتج: </strong>
+                <span id="halfLifeResult" style="color: #dc3545; font-weight: bold;">بانتظار تسجيل البيانات...</span>
+            </div>
+
+            <div style="max-height: 200px; overflow-y: auto; margin-top: 15px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الزمن (ثانية)</th>
+                            <th>معدل العد الإشعاعي</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-credits">
+        <h3>مادة الفيزياء التطبيقية</h3>
+        <p>تم إعداد وتطوير هذه المهارة العملية بواسطة: <strong>الأستاذ أنور البلوشي</strong></p>
+        <p>للتواصل والاستفسار (رقم الهاتف): <strong>[يرجى إدخال رقم الهاتف هنا]</strong></p>
+    </div>
+</div>
+
+<script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playClickSound() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.015);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.015);
+    }
+
+    let isShaken = false;
+    let isRunning = false;
+    let timeElapsed = 0;
+    let currentActivity = 0; 
+    let baseBackground = 18; 
+    const realHalfLife = 70; 
+    let initialPaActivity = 0; 
+    let intervalId, soundIntervalId;
+    
+    const geigerProbe = document.getElementById('geigerProbe');
+    const labArea = document.getElementById('labArea');
+    const topLayer = document.getElementById('topLayer');
+    const counterScreen = document.getElementById('counterScreen');
+    const shakeBtn = document.getElementById('shakeBtn');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const dataTableBody = document.getElementById('dataTableBody');
+    const halfLifeResult = document.getElementById('halfLifeResult');
+
+    const ctx = document.getElementById('decayChart').getContext('2d');
+    let decayChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'منحنى اضمحلال البروتكتينيوم-234',
+                data: [],
+                borderColor: '#dc3545',
+                backgroundColor: 'rgba(220, 53, 69, 0.05)',
+                borderWidth: 2,
+                tension: 0.2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { title: { display: true, text: 'الزمن (ثانية)' } },
+                y: { title: { display: true, text: 'العدّات لكل فترة' }, min: 0 }
+            }
+        }
+    });
+
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    geigerProbe.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - geigerProbe.offsetLeft;
+        offsetY = e.clientY - geigerProbe.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        let x = e.clientX - offsetX;
+        let y = e.clientY - offsetY;
+
+        const maxLeft = labArea.clientWidth - geigerProbe.clientWidth;
+        const maxTop = labArea.clientHeight - geigerProbe.clientHeight;
+        
+        x = Math.max(0, Math.min(x, maxLeft));
+        y = Math.max(0, Math.min(y, maxTop));
+
+        geigerProbe.style.left = x + 'px';
+        geigerProbe.style.top = y + 'px';
+        
+        calculateRadiation();
+    });
+
+    document.addEventListener('mouseup', () => isDragging = false);
+
+    function calculateRadiation() {
+        const probeRect = geigerProbe.getBoundingClientRect();
+        const layerRect = topLayer.getBoundingClientRect();
+
+        const pX = probeRect.left + probeRect.width / 2;
+        const pY = probeRect.top + probeRect.height / 2;
+        const lX = layerRect.left + layerRect.width / 2;
+        const lY = layerRect.top + layerRect.height / 2;
+
+        const distance = Math.sqrt(Math.pow(pX - lX, 2) + Math.pow(pY - lY, 2));
+        let distanceFactor = Math.max(0, 1 - (distance / 240)); 
+        
+        let paContribution = 0;
+        if (isShaken) {
+            paContribution = initialPaActivity * Math.exp(- (Math.log(2) / realHalfLife) * timeElapsed);
+        }
+
+        currentActivity = Math.round(baseBackground + (paContribution * distanceFactor));
+        counterScreen.innerText = `العداد: ${currentActivity} cpm`;
+
+        clearInterval(soundIntervalId);
+        if (currentActivity > 5) {
+            let intervalTime = 60000 / (currentActivity * 2.2);
+            intervalTime = Math.max(25, Math.min(intervalTime, 900));
+            soundIntervalId = setInterval(playClickSound, intervalTime);
+        }
+    }
+
+    shakeBtn.addEventListener('click', () => {
+        isShaken = true;
+        initialPaActivity = 480 + Math.random() * 80; 
+        timeElapsed = 0;
+        topLayer.classList.add('active-radiation');
+        startBtn.disabled = false;
+        calculateRadiation();
+    });
+
+    startBtn.addEventListener('click', () => {
+        if(isRunning) return;
+        isRunning = true;
+        startBtn.disabled = true;
+        shakeBtn.disabled = true;
+
+        intervalId = setInterval(() => {
+            timeElapsed += 10;
+            calculateRadiation();
+
+            let actualCount = Math.round(currentActivity + (Math.random() * 6 - 3));
+            if(actualCount < 0) actualCount = 0;
+
+            const row = `<tr><td>${timeElapsed}</td><td>${actualCount}</td></tr>`;
+            dataTableBody.innerHTML += row;
+
+            decayChart.data.labels.push(timeElapsed);
+            decayChart.data.datasets[0].data.push(actualCount);
+            decayChart.update();
+
+            if (timeElapsed >= 50) {
+                calculateHalfLifeRealtime();
+            }
+
+            if(timeElapsed >= 180) {
+                clearInterval(intervalId);
+                clearInterval(soundIntervalId);
+            }
+        }, 1000); 
+    });
+
+    function calculateHalfLifeRealtime() {
+        const data = decayChart.data.datasets[0].data;
+        if (data.length < 3) return;
+        let initialValue = data[0] - baseBackground;
+        let targetValue = initialValue / 2 + baseBackground;
+        
+        for (let i = 0; i < data.length; i++) {
+            if (data[i] <= targetValue) {
+                let estimatedHalfLife = decayChart.data.labels[i];
+                halfLifeResult.innerText = `حوالي ${estimatedHalfLife} ثانية ثانية تقريباً`;
+                return;
+            }
+        }
+    }
+
+    resetBtn.addEventListener('click', () => {
+        clearInterval(intervalId);
+        clearInterval(soundIntervalId);
+        isShaken = false;
+        isRunning = false;
+        timeElapsed = 0;
+        currentActivity = 0;
+        topLayer.classList.remove('active-radiation');
+        counterScreen.innerText = "العداد: 000 cpm";
+        halfLifeResult.innerText = "بانتظار تسجيل البيانات...";
+        dataTableBody.innerHTML = "";
+        decayChart.data.labels = [];
+        decayChart.data.datasets[0].data = [];
+        decayChart.update();
+        geigerProbe.style.top = "25px";
+        geigerProbe.style.left = "25px";
+        shakeBtn.disabled = false;
+        startBtn.disabled = true;
+    });
+
+    calculateRadiation();
+</script>
+</body>
+</html>
