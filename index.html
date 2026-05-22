@@ -3,837 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة طاقة الربط النووي التفاعلية - الأستاذ أنور البلوشي</title>
+    <title>منصة الفيزياء النووية التفاعلية</title>
+    
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
-            color: #1e293b;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-            font-weight: bold;
-        }
-        h1 {
-            color: #b91c1c;
-            margin-bottom: 5px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .subtitle {
-            color: #475569;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
-            border: 1px solid #cbd5e1;
-        }
-        
-        .audio-guide-panel {
-            background: #eff6ff;
-            border: 2px solid #2563eb;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-align: right;
-        }
-        .audio-btn {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-        .audio-btn:hover {
-            background-color: #1d4ed8;
-        }
-        .audio-btn.playing {
-            background-color: #dc2626;
+        :root {
+            --primary-dark: #0f172a;
+            --accent-blue: #0284c7;
+            --bg-light: #f8fafc;
+            --border-bold: #1e293b;
+            --success-green: #16a34a;
+            --danger-red: #dc2626;
         }
 
-        .panel {
-            background: #f8fafc;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--primary-dark);
+            margin: 0;
             padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 20px;
-            text-align: right;
-        }
-        .panel-title {
-            color: #0f172a;
-            font-size: 18px;
-            margin-top: 0;
-            border-bottom: 2px solid #b91c1c;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #334155;
-        }
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-            background-color: #fff;
-            font-weight: bold;
-            color: #0f172a;
-        }
-        
-        .component-badge {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            font-weight: bold;
-        }
-        .component-badge .number {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-        
-        .isotope-display {
-            font-size: 55px;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            color: #0f172a;
-            text-align: center;
-            margin: 15px 0;
-            direction: ltr;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            width: 180px;
-            margin: 15px auto;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 100vh;
         }
-        .isotope-box {
-            display: inline-flex;
-            align-items: center;
-            position: relative;
-            padding-left: 40px;
-            font-weight: bold;
-        }
-        .isotope-inline {
-            display: inline-flex;
-            align-items: center;
-            position: relative;
-            padding-left: 24px;
-            font-size: 22px;
-            color: #b91c1c;
-            font-family: 'Courier New', Courier, monospace;
-            vertical-align: middle;
-            margin: 0 5px;
-        }
-        .nuclear-numbers {
-            display: inline-flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end;
-            font-size: 20px;
-            line-height: 1.1;
-            position: absolute;
-            left: 0;
-            width: 35px;
-            font-weight: bold;
-            color: #b91c1c;
-        }
-        .nuclear-numbers-inline {
-            display: inline-flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end;
-            font-size: 11px;
-            line-height: 1.0;
-            position: absolute;
-            left: 0;
-            width: 20px;
-            font-weight: bold;
-            color: #b91c1c;
-        }
-        
-        canvas {
-            background: #ffffff;
-            border: 2px solid #94a3b8;
-            border-radius: 10px;
-            display: block;
-            margin: 20px auto;
-            max-width: 100%;
-        }
-        .results-table {
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid var(--border-bold);
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: #ffffff;
-            font-weight: bold;
+            max-width: 750px;
+            box-shadow: 0 10px 25 rgba(0, 0, 0, 0.05);
         }
-        .results-table th, .results-table td {
-            border: 1px solid #cbd5e1;
-            padding: 12px;
+
+        h2, h3, h4, p, label, select, input, button, table, span, div, td, th {
+            font-weight: 900 !important;
+            color: var(--primary-dark) !important;
+        }
+
+        h2 {
             text-align: center;
-            font-size: 15px;
-            font-weight: bold;
+            color: var(--accent-blue) !important;
+            border-bottom: 4px solid var(--border-bold);
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            margin-top: 0;
         }
-        .results-table th {
-            background-color: #e2e2e2;
-            color: #b91c1c;
-            font-weight: bold;
+
+        .audio-guide-btn {
+            width: 100%;
+            background-color: var(--accent-blue);
+            color: white !important;
+            border: 3px solid var(--border-bold);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: transform 0.1s;
         }
-        .highlight-blue { color: #2563eb; font-weight: bold; }
-        .highlight-purple { color: #7c3aed; font-weight: bold; }
-        .highlight-orange { color: #ea580c; font-weight: bold; }
-        .highlight-green { color: #16a34a; font-weight: bold; }
-        
-        .quiz-container {
-            background: #fff;
-            border: 2px solid #b91c1c;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-        .quiz-block {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
+
+        .audio-guide-btn:active { transform: scale(0.98); }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background-color: #f1f5f9;
+            border: 3px solid var(--border-bold);
+            border-radius: 14px;
             padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .info-section { grid-template-columns: 1fr; }
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            border: 2px solid var(--border-bold);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .equations-box {
+            padding: 5px;
+        }
+
+        .math-display {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            direction: ltr;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px;
+            vertical-align: middle;
+            padding: 5px;
+        }
+
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 4px;
+            vertical-align: middle;
+        }
+
+        .math-numerator {
+            border-bottom: 2px solid var(--border-bold);
+            padding-bottom: 2px;
+            width: 100%;
+        }
+
+        .math-denominator {
+            padding-top: 2px;
+            width: 100%;
+        }
+
+        .equation-line {
+            background: white;
+            border: 2px solid var(--border-bold);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
-        .quiz-question {
-            font-size: 17px;
-            color: #0f172a;
-            margin-bottom: 12px;
-            border-bottom: 1px dashed #cbd5e1;
-            padding-bottom: 8px;
-            line-height: 1.6;
+
+        label {
+            display: block;
+            margin-bottom: 8px;
         }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-bold);
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .action-btn {
+            width: 100%;
+            background-color: var(--accent-blue);
+            color: white !important;
+            padding: 14px;
+            border: 3px solid var(--border-bold);
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-btn {
+            background-color: #10b981;
+            margin-bottom: 25px; /* مسافة إضافية قبل ظهور النتيجة */
+        }
+
+        .output-box {
+            margin-top: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-right: 6px solid var(--accent-blue);
+            border-radius: 8px;
+            border-top: 2px solid var(--border-bold);
+            border-bottom: 2px solid var(--border-bold);
+            border-left: 2px solid var(--border-bold);
+            display: none;
+        }
+
+        .question-text {
+            font-style: italic;
+            background-color: #f0f9ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-blue);
+            line-height: 1.8;
+        }
+
         .quiz-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-bottom: 20px;
         }
+
         .option-btn {
-            background: #ffffff;
-            border: 2px solid #cbd5e1;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #1e293b;
-        }
-        .option-btn:hover {
-            background: #f1f5f9;
-            border-color: #94a3b8;
-        }
-        .option-btn.selected-correct {
-            background: #dcfce7;
-            border-color: #16a34a;
-            color: #14532d;
-        }
-        .option-btn.selected-wrong {
-            background: #fee2e2;
-            border-color: #dc2626;
-            color: #7f1d1d;
-        }
-        .quiz-feedback {
-            margin-top: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            min-height: 25px;
-        }
-        
-        /* تنسيق زر توليد أسئلة جديدة المضاف */
-        .refresh-quiz-btn {
-            background-color: #16a34a;
-            color: white;
-            border: none;
-            padding: 12px 25px;
+            background: white;
+            border: 3px solid var(--border-bold);
+            border-radius: 8px;
+            padding: 14px;
             font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
             cursor: pointer;
-            margin-top: 10px;
-            transition: background 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: right;
         }
-        .refresh-quiz-btn:hover {
-            background-color: #15803d;
-        }
-        
-        .credits {
-            margin-top: 25px;
-            padding: 15px;
-            background: #e2e8f0;
-            border-radius: 6px;
+
+        .option-btn:hover { background: #f1f5f9; }
+
+        .highlight { color: var(--accent-blue) !important; }
+        .wrong-highlight { color: var(--danger-red) !important; }
+
+        footer {
             text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 4px solid var(--border-bold);
             font-size: 16px;
-            font-weight: bold;
-            color: #0f172a;
-            border: 1px dashed #94a3b8;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>حاسبة طاقة الربط النووي التفاعلية وموقع النواة بالمخطط</h1>
-    <p class="subtitle">نسخة مطورة تفاعلية للمناهج العمانية - مادة الفيزياء</p>
+    <h2>⚛️ مختبر الفيزياء النووية التفاعلي</h2>
+
+    <button class="audio-guide-btn" onclick="playVoiceGuide()">🔊 اضغط هنا للاستماع إلى الشرح الصوتي وطريقة الاستخدام</button>
+
+    <div class="info-section">
+        <div class="canvas-container">
+            <span style="font-size: 13px; margin-bottom: 8px;">منحنى اضمحلال الأنوية المشعة الأسي</span>
+            <canvas id="decayCanvas" width="280" height="170"></canvas>
+        </div>
+        <div class="equations-box">
+            <h4 style="margin: 0 0 10px 0;">📋 مختصر القوانين بصيغة الدفتر:</h4>
+            <div>• صيغة الاضمحلال الأسي النيبيري:</div>
+            <div class="equation-line">
+                <div class="math-display">N = N<sub>0</sub> · e<sup>-λ · t</sup></div>
+            </div>
+            <div>• حساب ثابت التحلل الإشعاعي:</div>
+            <div class="equation-line">
+                <div class="math-display">
+                    λ = 
+                    <div class="math-fraction">
+                        <div class="math-numerator">ln(2)</div>
+                        <div class="math-denominator">T<sub>½</sub></div>
+                    </div>
+                </div>
+            </div>
+            <div>• حساب عدد الفترات الزمنية:</div>
+            <div class="equation-line">
+                <div class="math-display">
+                    n = 
+                    <div class="math-fraction">
+                        <div class="math-numerator">t</div>
+                        <div class="math-denominator">T<sub>½</sub></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>🛠️ مصمم ومحلل المسائل الذكي</h3>
     
-    <div class="audio-guide-panel">
-        <div>
-            <div style="color: #1e3a8a; font-size: 16px; margin-bottom: 4px;">🔊 <strong>دليل الشرح الصوتي الواقعي المطوّر:</strong></div>
-            <div style="color: #4b5563; font-size: 13px; font-weight: normal;">تم تحسين الصوت فيزيائياً ليعطي نبرة محادثة طبيعية مريحة وأقل روبوتية أثناء الشرح.</div>
-        </div>
-        <button id="audioGuideBtn" class="audio-btn">
-            <span>▶️ استمع للشرح المطور</span>
-        </button>
+    <div class="form-group">
+        <label for="unknown">1. ما الذي تبحث عنه وتريد حسابه؟</label>
+        <select id="unknown" onchange="updateFields()">
+            <option value="Thalf">عمر النصف (T<sub>½</sub>)</option>
+            <option value="lambda">معامل الانحلال / ثابت التحلل (λ)</option>
+            <option value="t">الزمن الكلي للتحلل (t)</option>
+            <option value="N">عدد الأنوية المتبقية (N)</option>
+            <option value="N0">عدد الأنوية الابتدائي (N<sub>0</sub>)</option>
+        </select>
     </div>
 
-    <div class="panel">
-        <div class="panel-title">أولاً: اختر النواة المراد دراستها من القائمة</div>
-        <div class="form-group">
-            <select id="presetSelect"></select>
-        </div>
+    <div class="form-group">
+        <label for="time_unit">2. اختر وحدة الزمن المفضلة للمسألة:</label>
+        <select id="time_unit" onchange="updateFields()">
+            <option value="ثانية">ثانية (s)</option>
+            <option value="دقيقة">دقيقة (min)</option>
+            <option value="ساعة">ساعة (h)</option>
+            <option value="يوم">يوم (day)</option>
+            <option value="سنة">سنة (year)</option>
+        </select>
     </div>
 
-    <div class="panel">
-        <div class="panel-title">ثانياً: الرمز الكيميائي والصيغة النووية الصحيحة</div>
-        <div class="isotope-display" id="isotopeDisplay">-</div>
+    <hr style="border: 0; border-top: 3px solid var(--border-bold); margin: 25px 0;">
+
+    <div id="inputs-container"></div>
+
+    <!-- أزرار التحكم -->
+    <button class="action-btn" onclick="generateAndSolve()">صياغة وحل المسألة الحالية 🚀</button>
+    <button class="action-btn quiz-btn" onclick="generateRandomQuiz()">🎲 توليد سؤال اختبار عشوائي جديد</button>
+
+    <!-- تم نقل صندوق المخرجات والحل ليكون مباشرة أسفل الأزرار وقبل التذييل المكتوب -->
+    <div id="output" class="output-box">
+        <h3 id="output-title" style="text-align: right; margin-top: 0;">📝 المسألة المصاغة:</h3>
+        <div id="question" class="question-text"></div>
         
-        <h3 style="color: #475569; text-align: center; margin-top: 25px; margin-bottom: 10px; font-weight: bold;">المكونات الأساسية للنواة والكتلة الفعلية:</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
-            <div class="component-badge">
-                <label>عدد البروتونات (Z)</label>
-                <div id="badgeZ" class="number highlight-blue">-</div>
-            </div>
-            <div class="component-badge">
-                <label>عدد النيوترونات (N)</label>
-                <div id="badgeN" class="number highlight-purple">-</div>
-            </div>
-            <div class="component-badge">
-                <label>كتلة النواة الفعلية (u)</label>
-                <div id="badgeMass" class="number highlight-orange" style="font-size: 20px;">-</div>
-            </div>
-        </div>
+        <div id="quiz-space" class="quiz-options"></div>
+
+        <h3 style="text-align: right;">🧮 طريقة الحل والخطوات بالتفصيل:</h3>
+        <div id="solution" style="line-height: 2; font-size: 16px;"></div>
     </div>
 
-    <div class="panel">
-        <div class="panel-title">ثالثاً: موقع النواة على منحنى طاقة الربط لكل نيوكليون (MeV)</div>
-        <canvas id="graphCanvas" width="850" height="400"></canvas>
-    </div>
-
-    <div class="panel">
-        <div class="panel-title">رابعاً: خطوات الحسابات الفيزيائية الدقيقة للربط النووي</div>
-        <table class="results-table">
-            <thead>
-                <tr>
-                    <th>الخطوة الفيزيائية</th>
-                    <th>طريقة الحساب الرياضية</th>
-                    <th>النتيجة والقيمة الدقيقة</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>كتلة المكونات وهي حرة (متفرقة)</td>
-                    <td>(Z &times; m<sub>p</sub>) + (N &times; m<sub>n</sub>)</td>
-                    <td id="resConstituentsMass">-</td>
-                </tr>
-                <tr>
-                    <td>النقص في الكتلة (&Delta;m)</td>
-                    <td>كتلة المكونات حرة - كتلة النواة الفعلية</td>
-                    <td id="resMassDefect" class="highlight-orange">-</td>
-                </tr>
-                <tr>
-                    <td>طاقة الربط النووي الإجمالية (E<sub>b</sub>)</td>
-                    <td>E<sub>b</sub> = &Delta;m &times; 931.5 MeV</td>
-                    <td id="resEbMeV" class="highlight-green">-</td>
-                </tr>
-                <tr>
-                    <td>طاقة الربط النووي الإجمالية بالجول (J)</td>
-                    <td>E<sub>b</sub>(MeV) &times; 1.60218 &times; 10<sup>-13</sup></td>
-                    <td id="resEbJoules" style="direction: ltr;">-</td>
-                </tr>
-                <tr>
-                    <td>طاقة الربط النووي لكل نيوكليون (E<sub>b</sub> / A)</td>
-                    <td>طاقة الربط الإجمالية &divide; العدد الكتلي A</td>
-                    <td id="resEbPerA" style="font-size: 18px; font-weight: bold; color: #b91c1c;">-</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="panel">
-        <div class="panel-title">خامساً: النشاط التقييمي الصفي (اضغط بالأسفل لتوليد أسئلة عشوائية مختلفة وجديدة تماماً)</div>
-        <div class="quiz-container">
-            
-            <div class="quiz-block">
-                <div class="quiz-question" id="q1Text">جاري إعداد صيغة السؤال الأول...</div>
-                <div class="quiz-options" id="q1Options"></div>
-            </div>
-            
-            <div class="quiz-block">
-                <div class="quiz-question" id="q2Text">جاري إعداد صيغة السؤال الثاني...</div>
-                <div class="quiz-options" id="q2Options"></div>
-            </div>
-            
-            <div class="quiz-feedback" id="quizFeedback"></div>
-            
-            <button id="refreshQuizBtn" class="refresh-quiz-btn">🔄 توليد أسئلة عشوائية جديدة</button>
-        </div>
-    </div>
-
-    <div class="credits">
-        👨‍🏫 عمل الأستاذ: أنور البلوشي | 📱 هاتف: 92818606 | مادة الفيزياء - سلطنة عمان
-    </div>
+    <footer>
+        المحتوى البرمجي والتفاعلي محفوظ 🇴🇲
+    </footer>
 </div>
 
 <script>
-const presetSelect = document.getElementById('presetSelect');
-const canvas = document.getElementById('graphCanvas');
-const ctx = canvas.getContext('2d');
-const audioGuideBtn = document.getElementById('audioGuideBtn');
-const refreshQuizBtn = document.getElementById('refreshQuizBtn');
-
-const mp = 1.007276;
-const mn = 1.008665;
-
-let isPlayingGuide = false;
-let speechQueue = [];
-let currentQueueIndex = 0;
-
-const isotopesData = [
-    {z:1, a:2, m:2.013553, s:"H", name:"الهيدروجين-2"},
-    {z:1, a:3, m:3.016049, s:"H", name:"الهيدروجين-3"},
-    {z:2, a:3, m:3.016029, s:"He", name:"الهيليوم-3"},
-    {z:2, a:4, m:4.002603, s:"He", name:"الهيليوم-4"},
-    {z:3, a:6, m:6.015122, s:"Li", name:"الليثيوم-6"},
-    {z:3, a:7, m:7.016004, s:"Li", name:"الليثيوم-7"},
-    {z:4, a:9, m:9.012182, s:"Be", name:"البريليوم-9"},
-    {z:5, a:10, m:10.012937, s:"B", name:"البورون-10"},
-    {z:5, a:11, m:11.009305, s:"B", name:"البورون-11"},
-    {z:6, a:12, m:12.000000, s:"C", name:"الكربون-12"},
-    {z:6, a:13, m:13.003355, s:"C", name:"الكربون-13"},
-    {z:6, a:14, m:14.003241, s:"C", name:"الكربون-14"},
-    {z:7, a:14, m:14.003074, s:"N", name:"النيتروجين-14"},
-    {z:7, a:15, m:15.000108, s:"N", name:"النيتروجين-15"},
-    {z:8, a:16, m:15.994915, s:"O", name:"الأكسجين-16"},
-    {z:8, a:17, m:16.999131, s:"O", name:"الأكسجين-17"},
-    {z:8, a:18, m:17.999160, s:"O", name:"الأكسجين-18"},
-    {z:9, a:19, m:18.998403, s:"F", name:"الفلور-19"},
-    {z:10, a:20, m:19.992440, s:"Ne", name:"النيون-20"},
-    {z:26, a:56, m:55.934937, s:"Fe", name:"الحديد-56"},
-    {z:36, a:92, m:91.926156, s:"Kr", name:"الكربتون-92"},
-    {z:38, a:88, m:87.905612, s:"Sr", name:"السترونشيوم-88"},
-    {z:56, a:138, m:137.905247, s:"Ba", name:"الباريوم-138"},
-    {z:92, a:235, m:235.043929, s:"U", name:"اليورانيوم-235"},
-    {z:92, a:238, m:238.050788, s:"U", name:"اليورانيوم-238"}
-];
-
-let q1CorrectAnswer = null;
-let q2CorrectAnswer = null;
-let q1Selected = null;
-let q2Selected = null;
-
-function populateSelect() {
-    presetSelect.innerHTML = "";
-    isotopesData.forEach((iso, index) => {
-        let opt = document.createElement('option');
-        opt.value = index;
-        opt.text = `${iso.name} [${iso.s}]`;
-        if(iso.z === 26 && iso.a === 56) opt.selected = true;
-        presetSelect.appendChild(opt);
-    });
-}
-
-function speakNaturalConversation(paragraphs) {
-    window.speechSynthesis.cancel(); 
-    speechQueue = paragraphs;
-    currentQueueIndex = 0;
-    playNextInQueue();
-}
-
-function playNextInQueue() {
-    if (currentQueueIndex >= speechQueue.length) {
-        isPlayingGuide = false;
-        audioGuideBtn.innerHTML = "<span>▶️ استمع للشرح المطور</span>";
-        audioGuideBtn.className = "audio-btn";
-        return;
-    }
-
-    let text = speechQueue[currentQueueIndex];
-    let utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ar-SA';
-    utterance.pitch = 0.70; 
-    utterance.rate = 0.88;  
-
-    utterance.onend = () => {
-        currentQueueIndex++;
-        setTimeout(playNextInQueue, 400); 
-    };
-
-    window.speechSynthesis.speak(utterance);
-}
-
-function sayFeedbackNatural(text) {
-    try {
-        let u = new SpeechSynthesisUtterance(text);
-        u.lang = 'ar-SA';
-        u.pitch = 0.70;
-        u.rate = 0.92;
-        window.speechSynthesis.speak(u);
-    } catch(e){}
-}
-
-function playClapEffect() {
-    try {
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        for (let i = 0; i < 5; i++) {
-            setTimeout(() => {
-                let osc = audioCtx.createGain();
-                let node = audioCtx.createOscillator();
-                node.type = 'triangle';
-                node.frequency.setValueAtTime(130 + Math.random()*70, audioCtx.currentTime);
-                node.connect(osc);
-                osc.connect(audioCtx.destination);
-                osc.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                osc.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.08);
-                node.start();
-                node.stop(audioCtx.currentTime + 0.08);
-            }, i * 60);
-        }
-    } catch(e){}
-}
-
-function createInlineIsotopeHTML(A, Z, symbol) {
-    return `<span class="isotope-inline"><span class="nuclear-numbers-inline"><span>${A}</span><span>${Z}</span></span>${symbol}</span>`;
-}
-
-function calculateAndDraw() {
-    const selectedIndex = presetSelect.value;
-    const iso = isotopesData[selectedIndex];
-    
-    let n = iso.a - iso.z; 
-    
-    document.getElementById('badgeZ').innerText = iso.z;
-    document.getElementById('badgeN').innerText = n;
-    document.getElementById('badgeMass').innerText = iso.m.toFixed(6);
-    
-    let mConstituents = (iso.z * mp) + (n * mn); 
-    let deltaM = mConstituents - iso.m; 
-    if (deltaM < 0) deltaM = 0; 
-    
-    let eb = deltaM * 931.5; 
-    let ebJoules = eb * 1.60218e-13; 
-    let ebPerA = eb / iso.a; 
-    
-    document.getElementById('isotopeDisplay').innerHTML = `
-        <span class="isotope-box">
-            <span class="nuclear-numbers">
-                <span>${iso.a}</span>
-                <span>${iso.z}</span>
-            </span>
-            ${iso.s}
-        </span>
-    `;
-    
-    document.getElementById('resConstituentsMass').innerText = mConstituents.toFixed(6) + " u";
-    document.getElementById('resMassDefect').innerText = deltaM.toFixed(6) + " u";
-    document.getElementById('resEbMeV').innerText = eb.toFixed(4) + " MeV";
-    document.getElementById('resEbJoules').innerText = ebJoules.toExponential(5) + " J";
-    document.getElementById('resEbPerA').innerText = ebPerA.toFixed(4) + " MeV / nucleon";
-    
-    drawGraph(iso.a, ebPerA, iso.s);
-    buildCompletelyRandomQuiz(selectedIndex); 
-}
-
-function buildCompletelyRandomQuiz(currentDeviceIndex) {
-    q1Selected = null;
-    q2Selected = null;
-    document.getElementById('quizFeedback').innerText = "";
-
-    let idx1 = Math.floor(Math.random() * isotopesData.length);
-    if(idx1 == currentDeviceIndex) idx1 = (idx1 + 3) % isotopesData.length;
-    const randomIso1 = isotopesData[idx1];
-    
-    let n1 = randomIso1.a - randomIso1.z;
-    let trueEb1 = ((randomIso1.z * mp) + (n1 * mn) - randomIso1.m) * 931.5;
-    if(trueEb1 < 0) trueEb1 = 0;
-    
-    q1CorrectAnswer = trueEb1.toFixed(2);
-    
-    let inlineIsotope1 = createInlineIsotopeHTML(randomIso1.a, randomIso1.z, randomIso1.s);
-    document.getElementById('q1Text').innerHTML = `❓ <strong>السؤال الأول:</strong> إذا علمت أن الكتلة الفعلية لنواة النظير ${inlineIsotope1} تساوي <strong>${randomIso1.m.toFixed(6)} u</strong>، احسب قيمة <strong>طاقة الربط النووي الإجمالية (E<sub>b</sub>)</strong> لها بوحدة (MeV)؟`;
-    
-    let q1Options = [
-        q1CorrectAnswer,
-        (trueEb1 + 24.4).toFixed(2),
-        (trueEb1 - 19.2).toFixed(2),
-        (trueEb1 * 0.75).toFixed(2)
-    ].sort(() => Math.random() - 0.5);
-
-    const q1Container = document.getElementById('q1Options');
-    q1Container.innerHTML = "";
-    q1Options.forEach(opt => {
-        let btn = document.createElement('button');
-        btn.className = "option-btn";
-        btn.innerText = opt + " MeV";
-        btn.addEventListener('click', () => {
-            Array.from(q1Container.children).forEach(b => b.className = "option-btn");
-            q1Selected = opt;
-            if(opt === q1CorrectAnswer) btn.className = "option-btn selected-correct";
-            else btn.className = "option-btn selected-wrong";
-            evaluateSingleQuestion(opt, q1CorrectAnswer);
-        });
-        q1Container.appendChild(btn);
-    });
-
-    let idx2 = Math.floor(Math.random() * isotopesData.length);
-    if(idx2 == currentDeviceIndex || idx2 == idx1) idx2 = (idx2 + 4) % isotopesData.length;
-    const randomIso2 = isotopesData[idx2];
-    
-    let n2 = randomIso2.a - randomIso2.z;
-    let trueEb2 = ((randomIso2.z * mp) + (n2 * mn) - randomIso2.m) * 931.5;
-    let trueEbPerA2 = trueEb2 / randomIso2.a;
-    if(trueEbPerA2 < 0) trueEbPerA2 = 0;
-
-    q2CorrectAnswer = trueEbPerA2.toFixed(2);
-    
-    let inlineIsotope2 = createInlineIsotopeHTML(randomIso2.a, randomIso2.z, randomIso2.s);
-    document.getElementById('q2Text').innerHTML = `❓ <strong>السؤال الثاني:</strong> إذا علمت أن طاقة الربط النووي الكلية لنواة ${inlineIsotope2} تساوي <strong>${trueEb2.toFixed(4)} MeV</strong>، أوجد <strong>طاقة الربط لكل نيوكليون</strong> لها؟`;
-    
-    let q2Options = [
-        q2CorrectAnswer,
-        (trueEbPerA2 + 1.35).toFixed(2),
-        (trueEbPerA2 - 0.75).toFixed(2),
-        (trueEbPerA2 * 0.6).toFixed(2)
-    ].sort(() => Math.random() - 0.5);
-
-    const q2Container = document.getElementById('q2Options');
-    q2Container.innerHTML = "";
-    q2Options.forEach(opt => {
-        let btn = document.createElement('button');
-        btn.className = "option-btn";
-        btn.innerText = opt + " MeV/nucleon";
-        btn.addEventListener('click', () => {
-            Array.from(q2Container.children).forEach(b => b.className = "option-btn");
-            q2Selected = opt;
-            if(opt === q2CorrectAnswer) btn.className = "option-btn selected-correct";
-            else btn.className = "option-btn selected-wrong";
-            evaluateSingleQuestion(opt, q2CorrectAnswer);
-        });
-        q2Container.appendChild(btn);
-    });
-}
-
-function evaluateSingleQuestion(selected, correct) {
-    const feedback = document.getElementById('quizFeedback');
-    if (selected === correct) {
-        feedback.innerText = "👏 برافو! إجابة صحيحة وممتازة.";
-        feedback.style.color = "#16a34a";
-        playClapEffect();
-        setTimeout(() => { sayFeedbackNatural("برافو! إجابة صحيحة"); }, 200);
-    } else {
-        feedback.innerText = "❌ حاول من جديد! راجع الحسابات بدقة.";
-        feedback.style.color = "#dc2626";
-        setTimeout(() => { sayFeedbackNatural("حاول من جديد"); }, 200);
-    }
-}
-
-function drawGraph(currentA, currentEbPerA, currentSymbol) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const padding = 60;
-    const graphWidth = canvas.width - padding * 2;
-    const graphHeight = canvas.height - padding * 2;
-    
-    function getX(aValue) { return padding + (aValue / 260) * graphWidth; }
-    function getY(ebValue) { return canvas.height - padding - (ebValue / 10) * graphHeight; }
-    
-    ctx.strokeStyle = "#e2e8f0";
-    ctx.lineWidth = 1;
-    for(let i=20; i<=260; i+=20) {
-        ctx.beginPath(); ctx.moveTo(getX(i), getY(0)); ctx.lineTo(getX(i), getY(10)); ctx.stroke();
-    }
-    for(let j=1; j<=10; j++) {
-        ctx.beginPath(); ctx.moveTo(getX(0), getY(j)); ctx.lineTo(getX(260), getY(j)); ctx.stroke();
-    }
-    
-    ctx.strokeStyle = "#475569";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(padding, padding - 10);
-    ctx.lineTo(padding, canvas.height - padding);
-    ctx.lineTo(canvas.width - padding + 10, canvas.height - padding);
-    ctx.stroke();
-    
-    ctx.fillStyle = "#0f172a";
-    ctx.font = "bold 13px Arial"; 
-    ctx.textAlign = "center";
-    ctx.fillText("عدد النيوكليونات (العدد الكتلي A)", canvas.width/2, canvas.height - 15);
-    
-    ctx.save();
-    ctx.translate(20, canvas.height/2);
-    ctx.rotate(-Math.PI/2);
-    ctx.fillText("طاقة الربط لكل نيوكليون (MeV)", 0, 0);
-    ctx.restore();
-    
-    ctx.font = "bold 11px Arial"; 
-    ctx.fillStyle = "#64748b";
-    for(let i=0; i<=240; i+=40) {
-        ctx.fillText(i, getX(i), canvas.height - padding + 18);
-    }
-    ctx.textAlign = "right";
-    for(let j=0; j<=10; j+=2) {
-        ctx.fillText(j, padding - 10, getY(j) + 4);
-    }
-    
-    const curvePoints = [
-        {a: 0, e: 0}, {a: 2, e: 1.11}, {a: 3, e: 2.57}, {a: 4, e: 7.07},
-        {a: 6, e: 5.3}, {a: 12, e: 7.68}, {a: 16, e: 7.98}, {a: 40, e: 8.55},
-        {a: 56, e: 8.8}, {a: 100, e: 8.6}, {a: 150, e: 8.3}, {a: 200, e: 7.8},
-        {a: 238, e: 7.6}, {a: 260, e: 7.4}
-    ];
-    
-    ctx.strokeStyle = "#0284c7";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(getX(curvePoints[0].a), getY(curvePoints[0].e));
-    for (let i = 1; i < curvePoints.length; i++) {
-        ctx.lineTo(getX(curvePoints[i].a), getY(curvePoints[i].e));
-    }
-    ctx.stroke();
-    
-    ctx.strokeStyle = "#475569";
-    ctx.lineWidth = 1.5;
-    ctx.font = "bold italic 11px Arial"; 
-    ctx.fillStyle = "#0f172a";
-    
-    ctx.beginPath();
-    ctx.moveTo(getX(10), getY(3)); ctx.lineTo(getX(15), getY(5.5));
-    ctx.stroke();
-    ctx.fillText("اندماج ↑", getX(22), getY(3.5));
-    
-    ctx.beginPath();
-    ctx.moveTo(getX(220), getY(7.65)); ctx.lineTo(getX(130), getY(8.2));
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(getX(130), getY(8.2)); ctx.lineTo(getX(136), getY(8.0));
-    ctx.moveTo(getX(130), getY(8.2)); ctx.lineTo(getX(136), getY(8.4));
-    ctx.stroke();
-    ctx.fillText("← انشطار", getX(180), getY(7.5));
-
-    if (currentA > 0 && currentEbPerA >= 0) {
-        let posX = getX(currentA);
-        let posY = getY(currentEbPerA);
+    function drawDecayCurve() {
+        const canvas = document.getElementById('decayCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         ctx.beginPath();
-        ctx.arc(posX, posY, 12, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(220, 38, 38, 0.25)";
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(posX, posY, 6, 0, Math.PI * 2);
-        ctx.fillStyle = "#dc2626";
-        ctx.fill();
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 3;
+        ctx.moveTo(35, 15);
+        ctx.lineTo(35, 145);
+        ctx.lineTo(265, 145);
         ctx.stroke();
-        
-        ctx.fillStyle = "#b91c1c";
-        ctx.font = "bold 14px Arial"; 
-        ctx.textAlign = "left";
-        ctx.fillText(` ${currentSymbol}-${currentA} (${currentEbPerA.toFixed(2)})`, posX + 8, posY - 8);
-    }
-}
 
-audioGuideBtn.addEventListener('click', () => {
-    if(!isPlayingGuide) {
-        isPlayingGuide = true;
-        audioGuideBtn.innerHTML = "<span>🛑 إيقاف الشرح الصوتي</span>";
-        audioGuideBtn.className = "audio-btn playing";
-        
-        const paragraphs = [
-            "مرحباً بكم يا شباب.. في مختبر الفيزياء التفاعلي للأستاذ أنور البلوشي.",
-            "اليوم.. سنتحدث عن مفهوم جوهري في الاستقرار النووي.. وهو منحنى طاقة الربط لكل نيوكليون.",
-            "بمجرد اختياركم لأي نواة من القائمة.. ستلاحظون تفكيك مكوناتها من بروتونات ونيوترونات أسفل الرمز مباشرة.",
-            "وسيقوم التطبيق.. بإسقاط موقعها كعلامة حمراء مميزة على المنحنى البياني.",
-            "تذكروا القاعدة دائماً.. الأنوية الخفيفة في يسار المخطط تميل للاندماج لتصبح أكثر ترابطاً.. بينما الأنوية الثقيلة في اليمين تميل للإنشطار.",
-            "وتظل نواة الحديد ستة وخمسين.. هي النواة الأكثر استقراراً في الطبيعة.",
-            "الآن.. خذوا دقيقة لتأمل الحسابات.. ثم اختبروا أنفسكم في أسئلة التحدي بالأسفل.. وبالتوفيق لكم جميعاً."
-        ];
-        
-        speakNaturalConversation(paragraphs);
-    } else {
-        isPlayingGuide = false;
+        ctx.beginPath();
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 3;
+        ctx.moveTo(35, 25);
+        for (let x = 35; x <= 250; x++) {
+            let t = (x - 35) / 55;
+            let y = 25 + 110 * (1 - Math.pow(0.5, t));
+            ctx.lineTo(x, 145 - (145 - y));
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = '#dc2626';
+        [0, 1, 2, 3].forEach(p => {
+            let x = 35 + p * 55;
+            let y = 145 - (120 * Math.pow(0.5, p));
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, 2 * Math.PI);
+            ctx.fill();
+        });
+    }
+
+    function updateFields() {
+        const unknown = document.getElementById('unknown').value;
+        const unit = document.getElementById('time_unit').value;
+        const container = document.getElementById('inputs-container');
+        let html = '';
+
+        if (unknown !== 'Thalf' && unknown !== 'lambda') html += `<div class="form-group"><label>أدخل قيمة عمر النصف بـ (${unit}):</label><input type="number" id="input_Thalf" step="any" min="0.00001" required></div>`;
+        if (unknown !== 't') html += `<div class="form-group"><label>أدخل الزمن الكلي للتحلل بـ (${unit}):</label><input type="number" id="input_t" step="any" min="0" required></div>`;
+        if (unknown !== 'N0') html += `<div class="form-group"><label>أدخل عدد الأنوية الابتدائي (N<sub>0</sub>):</label><input type="number" id="input_N0" step="any" min="0.00001" required></div>`;
+        if (unknown !== 'N') html += `<div class="form-group"><label>أدخل عدد الأنوية المتبقية حالياً (N):</label><input type="number" id="input_N" step="any" min="0" required></div>`;
+
+        container.innerHTML = html;
+        document.getElementById('output').style.display = 'none'; 
+    }
+
+    function playVoiceGuide() {
         window.speechSynthesis.cancel();
-        audioGuideBtn.innerHTML = "<span>▶️ استمع للشرح المطور</span>";
-        audioGuideBtn.className = "audio-btn";
+        const msg = "أهلاً بكم في مختبر الفيزياء النووية الذكي. لاستخدام البرنامج بشكل صحيح، اتبع الخطوات التالية: أولاً، حدد المتغير المطلوب حسابه من القائمة المنسدلة، مثل معامل الانحلال أو عمر النصف. ثانياً، اختر وحدة الزمن المفضلة لمسألتك. ثالثاً، قم بتعبئة المعطيات المتوفرة لديك، وتذكر دائماً من المنظور الفيزيائي أن عدد الأنوية المتبقية نون يجب أن يكون أقل من أو يساوي عدد الأنوية الابتدائي نون زيرو لمنع حدوث خطأ علمي. أخيراً، اضغط على زر صياغة وحل المسألة لتشاهد خطوات الحل الرياضية بالتفصيل، أو اضغط على زر توليد سؤال عشوائي لاختبار معلوماتك بشكل فوري.";
+        const utterance = new SpeechSynthesisUtterance(msg);
+        utterance.lang = 'ar-SA';
+        utterance.rate = 0.85;
+        utterance.pitch = 0.95;
+        window.speechSynthesis.speak(utterance);
     }
-});
 
-// تفعيل عمل زر التحديث لتوليد أسئلة عشوائية جديدة عند الضغط عليه
-refreshQuizBtn.addEventListener('click', () => {
-    const selectedIndex = presetSelect.value;
-    buildCompletelyRandomQuiz(selectedIndex);
-    // نغمة خفيفة تفيد بتحديث الأسئلة بنجاح
-    try {
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        osc.frequency.value = 587.33; // نغمة ناعمة
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
-    } catch(e){}
-});
+    function calculateSolution(unknown, Thalf, t, N0, N, unit) {
+        let q = "", s = "";
+        
+        if (unknown === 'Thalf') {
+            let lambda = -Math.log(N / N0) / t;
+            let calculated_Thalf = Math.log(2) / lambda;
+            q = `عينة من نظير مشع كان عدد أنويتها الابتدائي يساوي (N<sub>0</sub> = ${N0}) نواة. بعد مرور زمن كلي قدره (t = ${t}) ${unit}، أصبح عدد الأنوية المتبقية بدون تحلل هو (N = ${N}) نواة. احسب فترة عمر النصف (T<sub>½</sub>) لهذا النظير بـ (${unit})؟`;
+            s = `1. <b>استخدام المعادلة الأسية الطبيعية لحساب معامل الانحلال (λ):</b><br>
+                   <div class="math-display">N = N<sub>0</sub> · e<sup>-λt</sup> &nbsp;&implies;&nbsp; ${N} = ${N0} · e<sup>-λ · ${t}</sup></div><br>
+                   ومنها بأخذ اللوغاريتم الطبيعي للطرفين نجد أن: معامل الانحلال <div class="math-display">λ = ${lambda.toExponential(4)} \text{ ${unit}}⁻¹</div><br><br>
+                2. <b>حساب عمر النصف (T<sub>½</sub>):</b><br>
+                   <div class="math-display">T<sub>½</sub> = <div class="math-fraction"><div class="math-numerator">ln(2)</div><div class="math-denominator">λ</div></div> = <div class="math-fraction"><div class="math-numerator">0.693</div><div class="math-denominator">${lambda.toExponential(4)}</div></div> = <span class="highlight">${calculated_Thalf.toFixed(3)} ${unit}</span></div>`;
+        } else if (unknown === 'lambda') {
+            let calculated_lambda = -Math.log(N / N0) / t;
+            q = `عينة مشعة تحتوي في البداية على (N<sub>0</sub> = ${N0}) نواة. بعد مرور زمن كلي قدره (t = ${t}) ${unit} من النشاط الإشعاعي، تَبقى من العينة (N = ${N}) نواة دون تحلل. احسب معامل الانحلال الإشعاعي (ثابت التحلل λ) لهذا العنصر المِشع؟`;
+            s = `1. <b>كتابة قانون الاضمحلال الأسي النيبيري:</b><br>
+                   <div class="math-display">N = N<sub>0</sub> · e<sup>-λt</sup></div><br><br>
+                2. <b>التعويض بالقيم المعطاة في المسألة:</b><br>
+                   <div class="math-display">${N} = ${N0} · e<sup>-λ · ${t}</sup></div><br><br>
+                3. <b>قسمة الطرفين على العدد الابتدائي (N<sub>0</sub>) لعزل الدالة الأسية:</b><br>
+                   <div class="math-display"><div class="math-fraction"><div class="math-numerator">${N}</div><div class="math-denominator">${N0}</div></div> = e<sup>-λ · ${t}</sup> &nbsp;&implies;&nbsp; ${(N/N0).toFixed(4)} = e<sup>-λ · ${t}</sup></div><br><br>
+                4. <b>أخذ اللوغاريتم الطبيعي (ln) للطرفين للتخلص من الأساس الطبيعي (e):</b><br>
+                   <div class="math-display">ln(${(N/N0).toFixed(4)}) = -λ · ${t}</div><br>
+                   <div class="math-display">${Math.log(N/N0).toFixed(4)} = -λ · ${t}</div><br><br>
+                5. <b>حساب معامل الانحلال (λ) بالقسمة على معامله:</b><br>
+                   <div class="math-display">λ = <div class="math-fraction"><div class="math-numerator">${Math.log(N/N0).toFixed(4)}</div><div class="math-denominator">-${t}</div></div> = <span class="highlight">${calculated_lambda.toExponential(4)} \text{ ${unit}}⁻¹</span></div>`;
+        } else if (unknown === 't') {
+            let lambda = Math.log(2) / Thalf;
+            let calculated_t = -Math.log(N / N0) / lambda;
+            q = `نظير مشع فترة عمر النصف له هي (T<sub>½</sub> = ${Thalf}) ${unit}. إذا بدأت العينة بعدد أنوية ابتدائي يساوي (N<sub>0</sub> = ${N0}) نواة، فاحسب كم يستغرق من الوقت بالـ (${unit}) حتى يتبقى منها فقط (N = ${N}) نواة دون انحلال؟`;
+            s = `1. <b>حساب معامل الانحلال الإشعاعي (λ):</b><br>
+                   <div class="math-display">λ = <div class="math-fraction"><div class="math-numerator">ln(2)</div><div class="math-denominator">T<sub>½</sub></div></div> = <div class="math-fraction"><div class="math-numerator">0.693</div><div class="math-denominator">${Thalf}</div></div> = ${lambda.toExponential(4)} \text{ ${unit}}⁻¹</div><br><br>
+                2. <b>التعويض في معادلة الاضمحلال لإيجاد الزمن (t):</b><br>
+                   <div class="math-display">ln(<div class="math-fraction"><div class="math-numerator">N</div><div class="math-denominator">N<sub>0</sub></div></div>) = -λ · t &nbsp;&implies;&nbsp; ln(<div class="math-fraction"><div class="math-numerator">${N}</div><div class="math-denominator">${N0}</div></div>) = -(${lambda.toExponential(4)}) · t</div><br>
+                   <div class="math-display">t = <span class="highlight">${calculated_t.toFixed(3)} ${unit}</span></div>`;
+        } else if (unknown === 'N') {
+            let lambda = Math.log(2) / Thalf;
+            let calculated_N = N0 * Math.exp(-lambda * t);
+            q = `عينة مشعة تحتوي في البداية على (N<sub>0</sub> = ${N0}) نواة. إذا علمت أن عمر النصف لها هو (T<sub>½</sub> = ${Thalf}) ${unit}، فما هو عدد الأنوية المتبقية (N) التي ستظل مشعة بعد مرور زمن إجمالي قدره (t = ${t}) ${unit}؟`;
+            s = `1. <b>حساب معامل الانحلال الإشعاعي (λ):</b><br>
+                   <div class="math-display">λ = <div class="math-fraction"><div class="math-numerator">ln(2)</div><div class="math-denominator">T<sub>½</sub></div></div> = <div class="math-fraction"><div class="math-numerator">0.693</div><div class="math-denominator">${Thalf}</div></div> = ${lambda.toExponential(4)} \text{ ${unit}}⁻¹</div><br><br>
+                2. <b>تطبيق القانون الأسي المباشر لحساب المتبقي (N):</b><br>
+                   <div class="math-display">N = N<sub>0</sub> · e<sup>-λt</sup> &nbsp;&implies;&nbsp; N = ${N0} · e<sup>-(${lambda.toExponential(4)} · ${t})</sup></div><br>
+                   <div class="math-display">N = <span class="highlight">${calculated_N.toExponential(3)} نواة</span></div>`;
+        } else if (unknown === 'N0') {
+            let lambda = Math.log(2) / Thalf;
+            let calculated_N0 = N / Math.exp(-lambda * t);
+            q = `عينة من عنصر مشع، عمر النصف لها هو (T<sub>½</sub> = ${Thalf}) ${unit}. بعد مرور زمن كلي يساوي (t = ${t}) ${unit} وجدنا أن عدد الأنوية المتبقية داخلها هو (N = ${N}) نواة. احسب كم كان عدد الأنوية الابتدائي (N<sub>0</sub>) عند لحظة الصفر؟`;
+            s = `1. <b>حساب معامل الانحلال (λ):</b><br>
+                   <div class="math-display">λ = <div class="math-fraction"><div class="math-numerator">ln(2)</div><div class="math-denominator">T<sub>½</sub></div></div> = <div class="math-fraction"><div class="math-numerator">0.693</div><div class="math-denominator">${Thalf}</div></div> = ${lambda.toExponential(4)} \text{ ${unit}}⁻¹</div><br><br>
+                2. <b>إيجاد العدد الابتدائي (N<sub>0</sub>) بعكس العلاقة الأسية:</b><br>
+                   <div class="math-display">N<sub>0</sub> = <div class="math-fraction"><div class="math-numerator">N</div><div class="math-denominator">e<sup>-λt</sup></div></div> &nbsp;&implies;&nbsp; N<sub>0</sub> = <div class="math-fraction"><div class="math-numerator">${N}</div><div class="math-denominator">e<sup>-(${lambda.toExponential(4)} · ${t})</sup></div></div></div><br>
+                   <div class="math-display">N<sub>0</sub> = <span class="highlight">${calculated_N0.toExponential(4)} نواة</span></div>`;
+        }
+        
+        let rawAns = (unknown === 'lambda') ? (-Math.log(N / N0) / t) : (unknown==='Thalf'? t/(Math.log(N/N0)/Math.log(0.5)) : unknown==='t'? (Math.log(N/N0)/Math.log(0.5))*Thalf : unknown==='N'? N0*Math.pow(0.5,t/Thalf) : N/Math.pow(0.5,t/Thalf));
+        return { q: q, s: s, ans: rawAns };
+    }
 
-presetSelect.addEventListener('change', () => {
-    calculateAndDraw();
-});
+    function validateNuclearPhysics(unknown, Thalf, t, N0, N) {
+        if (N0 !== null && N0 <= 0) { alert("خطأ فيزيائي: عدد الأنوية الابتدائي (N0) يجب أن يكون أكبر من الصفر."); return false; }
+        if (N !== null && N < 0) { alert("خطأ فيزيائي: عدد الأنوية المتبقية لا يمكن أن يكون سالباً."); return false; }
+        if (Thalf !== null && Thalf <= 0) { alert("خطأ فيزيائي: عمر النصف يجب أن يكون قيمة موجبة تماماً."); return false; }
+        if (t !== null && t < 0) { alert("خطأ فيزيائي: الزمن الكلي لا يمكن أن يكون سالباً."); return false; }
 
-window.addEventListener('load', () => {
-    populateSelect();
-    calculateAndDraw();
-});
+        if (N !== null && N0 !== null && N > N0) {
+            alert("⚠️ خطأ منطقي وفيزيائي فادح:\n\nلقد أدخلت عدد أنوية متبقية (N) أكبر من العدد الابتدائي (N₀)!\n\nمن المنظور الفيزيائي، هذا يمثل عملية 'نمو أسي' وتكاثر وليس 'اضمحلالاً نووياً وتفككاً'. يرجى جعل المتبقي (N) أقل من أو يساوي الابتدائي (N₀).");
+            return false;
+        }
+
+        return true;
+    }
+
+    function generateAndSolve() {
+        document.getElementById('output-title').innerText = "📝 المسألة المصاغة الحالية:";
+        document.getElementById('quiz-space').innerHTML = "";
+        
+        const unknown = document.getElementById('unknown').value;
+        const unit = document.getElementById('time_unit').value;
+
+        const Thalf = document.getElementById('input_Thalf') ? parseFloat(document.getElementById('input_Thalf').value) : null;
+        const t = document.getElementById('input_t') ? parseFloat(document.getElementById('input_t').value) : null;
+        const N0 = document.getElementById('input_N0') ? parseFloat(document.getElementById('input_N0').value) : null;
+        const N = document.getElementById('input_N') ? parseFloat(document.getElementById('input_N').value) : null;
+
+        if ((Thalf !== null && isNaN(Thalf)) || (t !== null && isNaN(t)) || (N0 !== null && isNaN(N0)) || (N !== null && isNaN(N))) {
+            alert("يرجى تعبئة الحقول المطلوبة أولاً بأرقام صحيحة!"); return;
+        }
+
+        if(!validateNuclearPhysics(unknown, Thalf, t, N0, N)) {
+            return;
+        }
+
+        let result = calculateSolution(unknown, Thalf, t, N0, N, unit);
+        document.getElementById('question').innerHTML = result.q;
+        document.getElementById('solution').innerHTML = result.s;
+        document.getElementById('output').style.display = "block";
+    }
+
+    let quizAnswerValue = 0;
+    let quizSolutionHTML = "";
+
+    function generateRandomQuiz() {
+        document.getElementById('output-title').innerText = "📋 سؤال اختبار تجريبي عشوائي:";
+        const units = ["ثانية", "دقيقة", "ساعة", "يوم", "سنة"];
+        const unknowns = ["Thalf", "lambda", "t", "N", "N0"];
+        
+        let randUnit = units[Math.floor(Math.random() * units.length)];
+        let randUnknown = unknowns[Math.floor(Math.random() * unknowns.length)];
+        
+        let n_rand = Math.floor(Math.random() * 3) + 1; 
+        let th_rand = Math.floor(Math.random() * 8) + 2;
+        let t_rand = th_rand * n_rand;
+        let n0_rand = (Math.floor(Math.random() * 4) + 2) * 1000;
+        let n_mote_rand = n0_rand * Math.pow(0.5, n_rand);
+
+        let res = calculateSolution(randUnknown, th_rand, t_rand, n0_rand, n_mote_rand, randUnit);
+        quizAnswerValue = res.ans;
+        quizSolutionHTML = res.s;
+
+        document.getElementById('question').innerHTML = res.q;
+        
+        let quizSpace = document.getElementById('quiz-space');
+        quizSpace.innerHTML = "";
+
+        let choices = [quizAnswerValue];
+        while(choices.length < 4) {
+            let fakeFactor = 0.5 + Math.random() * 1.0;
+            let fakeAns = quizAnswerValue * fakeFactor;
+            if(!choices.some(c => Math.abs(c - fakeAns) < (quizAnswerValue * 0.12))) {
+                choices.push(fakeAns);
+            }
+        }
+        choices.sort(() => Math.random() - 0.5);
+
+        choices.forEach(val => {
+            let strVal = val > 10000 || val < 0.01 ? val.toExponential(2) : val.toFixed(3);
+            quizSpace.innerHTML += `<button class="option-btn" onclick="verifyQuizAnswer(${val}, this)">🔘 ${strVal}</button>`;
+        });
+
+        document.getElementById('solution').innerHTML = "<span style='color:#64748b;'>يرجى اختيار أحد البدائل من الأعلى ليتم التصحيح الفوري تلقائياً...</span>";
+        document.getElementById('output').style.display = "block";
+    }
+
+    function verifyQuizAnswer(chosen, btnElement) {
+        document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+        window.speechSynthesis.cancel();
+        
+        let solContainer = document.getElementById('solution');
+        let audioMsg = "";
+
+        if (Math.abs(chosen - quizAnswerValue) < (quizAnswerValue * 0.02)) {
+            btnElement.style.backgroundColor = "#d1fae5";
+            btnElement.style.borderColor = "var(--success-green)";
+            solContainer.innerHTML = `<span style="color:var(--success-green); font-size: 18px;">🎉 أحسنت صنعاً، الإجابة صحيحة ودقيقة!</span><br><br>` + quizSolutionHTML;
+            audioMsg = "برافو إجابة صحيحة";
+            triggerApplause();
+        } else {
+            btnElement.style.backgroundColor = "#fee2e2";
+            btnElement.style.borderColor = "var(--danger-red)";
+            solContainer.innerHTML = `<span style="color:var(--danger-red); font-size: 18px;">❌ الإجابة غير صحيحة، تفضل خطوات الحل بالتفصيل للتعلم منها:</span><br><br>` + quizSolutionHTML;
+            audioMsg = "حاول من جديد";
+        }
+
+        const utter = new SpeechSynthesisUtterance(audioMsg);
+        utter.lang = 'ar-SA';
+        utter.rate = 0.9;
+        window.speechSynthesis.speak(utter);
+    }
+
+    function triggerApplause() {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        for (let i = 0; i < 16; i++) {
+            setTimeout(() => {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(120 + Math.random() * 280, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.12);
+            }, i * 35);
+        }
+    }
+
+    window.onload = function() {
+        drawDecayCurve();
+        updateFields();
+    };
 </script>
 
 </body>
 </html>
+    
