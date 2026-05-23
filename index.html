@@ -3,60 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاكاة المحول الكهربائي بدائرة التوالي - الأستاذ أنور البلوشي</title>
+    <title>حاسبة طاقة الربط النووي التفاعلية - الأستاذ أنور البلوشي</title>
     <style>
-        :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-main: #111111;
-            --primary: #0056b3;
-            --success: #1e7e34;
-            --danger: #bd2130;
-            --border-color: #cccccc;
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: #f0f4f8;
+            color: #1e293b;
             margin: 0;
             padding: 20px;
+            text-align: center;
             font-weight: bold;
         }
-
-        .container {
-            max-width: 950px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 2px solid var(--border-color);
+        h1 {
+            color: #b91c1c;
+            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: bold;
         }
-
-        header {
-            text-align: center;
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        h1, h2, h3 {
-            color: var(--text-main);
-            font-weight: 900;
+        .subtitle {
+            color: #475569;
             margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
-
-        .audio-btn-container {
-            text-align: left;
-            margin-bottom: 15px;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid #cbd5e1;
         }
-
-        .btn {
-            background-color: var(--primary);
+        
+        .audio-guide-panel {
+            background: #eff6ff;
+            border: 2px solid #2563eb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: right;
+        }
+        .audio-btn {
+            background-color: #2563eb;
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
             border-radius: 6px;
@@ -64,650 +59,780 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             transition: background 0.2s;
         }
-
-        .btn:hover { background-color: #004085; }
-        .btn-secondary { background-color: #6c757d; }
-        .btn-secondary:hover { background-color: #5a6268; }
-        
-        .btn-next {
-            background-color: var(--success);
-            font-size: 18px;
-            padding: 15px 35px;
-            animation: pulse-green 2s infinite;
+        .audio-btn:hover {
+            background-color: #1d4ed8;
         }
-        .btn-next:hover { background-color: #19692c; }
-
-        @keyframes pulse-green {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(30, 126, 52, 0.7); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(30, 126, 52, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(30, 126, 52, 0); }
+        .audio-btn.playing {
+            background-color: #dc2626;
         }
 
-        .simulation-container {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 20px;
-            background: #f1f3f5;
+        .panel {
+            background: #f8fafc;
             padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        .panel-title {
+            color: #0f172a;
+            font-size: 18px;
+            margin-top: 0;
+            border-bottom: 2px solid #b91c1c;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #334155;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fff;
+            font-weight: bold;
+            color: #0f172a;
+        }
+        
+        .component-badge {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
-            border: 2px solid var(--border-color);
-            margin-bottom: 25px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-weight: bold;
         }
-
-        @media (max-width: 800px) {
-            .simulation-container { grid-template-columns: 1fr; }
+        .component-badge .number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
         }
-
-        .canvas-container {
+        
+        .isotope-display {
+            font-size: 55px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #0f172a;
+            text-align: center;
+            margin: 15px 0;
+            direction: ltr;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #fff;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px;
-        }
-
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .control-panel {
             background: #ffffff;
             padding: 15px;
-            border-radius: 6px;
-            border: 2px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .control-panel h3 {
-            font-size: 18px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 5px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .control-group label {
-            font-size: 15px;
-            color: #333;
-        }
-
-        .control-group input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        @media (max-width: 600px) {
-            .cards-grid { grid-template-columns: 1fr; }
-        }
-
-        .card {
-            background: #fdfdfd;
-            border: 2px solid var(--border-color);
-            padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            width: 180px;
+            margin: 15px auto;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
-
-        .card h3 {
-            color: var(--primary);
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
+        .isotope-box {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding-left: 40px;
+            font-weight: bold;
         }
-
-        table {
+        .isotope-inline {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding-left: 24px;
+            font-size: 22px;
+            color: #b91c1c;
+            font-family: 'Courier New', Courier, monospace;
+            vertical-align: middle;
+            margin: 0 5px;
+        }
+        .nuclear-numbers {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            font-size: 20px;
+            line-height: 1.1;
+            position: absolute;
+            left: 0;
+            width: 35px;
+            font-weight: bold;
+            color: #b91c1c;
+        }
+        .nuclear-numbers-inline {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            font-size: 11px;
+            line-height: 1.0;
+            position: absolute;
+            left: 0;
+            width: 20px;
+            font-weight: bold;
+            color: #b91c1c;
+        }
+        
+        canvas {
+            background: #ffffff;
+            border: 2px solid #94a3b8;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+        }
+        .results-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            font-size: 16px;
+            background: #ffffff;
+            font-weight: bold;
         }
-
-        th, td {
-            border: 2px solid var(--border-color);
+        .results-table th, .results-table td {
+            border: 1px solid #cbd5e1;
             padding: 12px;
             text-align: center;
+            font-size: 15px;
+            font-weight: bold;
         }
-
-        th { background-color: #e9ecef; }
-
-        .quiz-section {
-            background: #fff3cd;
-            border: 2px solid #ffeeba;
-            padding: 20px;
+        .results-table th {
+            background-color: #e2e2e2;
+            color: #b91c1c;
+            font-weight: bold;
+        }
+        .highlight-blue { color: #2563eb; font-weight: bold; }
+        .highlight-purple { color: #7c3aed; font-weight: bold; }
+        .highlight-orange { color: #ea580c; font-weight: bold; }
+        .highlight-green { color: #16a34a; font-weight: bold; }
+        
+        .quiz-container {
+            background: #fff;
+            border: 2px solid #b91c1c;
             border-radius: 8px;
-            margin-top: 30px;
-        }
-
-        .options-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            padding: 20px;
             margin-top: 15px;
         }
-
+        .quiz-block {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .quiz-question {
+            font-size: 17px;
+            color: #0f172a;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 8px;
+            line-height: 1.6;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
         .option-btn {
             background: #ffffff;
-            border: 2px solid #ced4da;
-            padding: 14px;
+            border: 2px solid #cbd5e1;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #1e293b;
+        }
+        .option-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+        .option-btn.selected-correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+        }
+        .option-btn.selected-wrong {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #7f1d1d;
+        }
+        .quiz-feedback {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 25px;
+        }
+        
+        /* تنسيق زر توليد أسئلة جديدة المضاف */
+        .refresh-quiz-btn {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            padding: 12px 25px;
             font-size: 16px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            text-align: right;
-            transition: all 0.2s;
-        }
-
-        .option-btn:hover:not(:disabled) { background: #e2e6ea; }
-        
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .feedback {
-            margin-top: 15px;
-            font-size: 19px;
-            text-align: right;
-            min-height: 30px;
-            line-height: 1.6;
-        }
-
-        .solution-box {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-            padding: 15px;
-            border-radius: 6px;
             margin-top: 10px;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            border-top: 2px solid var(--border-color);
-            color: #444444;
-            background: #e9ecef;
+        .refresh-quiz-btn:hover {
+            background-color: #15803d;
+        }
+        
+        .credits {
+            margin-top: 25px;
             padding: 15px;
-            border-radius: 0 0 12px 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f172a;
+            border: 1px dashed #94a3b8;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>المعمل الافتراضي المتكامل للمحول الكهربائي الذكي</h1>
-        <p>تطوير وتحليل فيزيائي شامل: الأستاذ أنور البلوشي</p>
-    </header>
-
-    <div class="audio-btn-container">
-        <button class="btn" onclick="speakDynamicValues()">🔊 شرح تفاصيل الجهد والتيار بصوت البرنامج</button>
+    <h1>حاسبة طاقة الربط النووي التفاعلية وموقع النواة بالمخطط</h1>
+    <p class="subtitle">نسخة مطورة تفاعلية للمناهج العمانية - مادة الفيزياء</p>
+    
+    <div class="audio-guide-panel">
+        <div>
+            <div style="color: #1e3a8a; font-size: 16px; margin-bottom: 4px;">🔊 <strong>دليل الشرح الصوتي الواقعي المطوّر:</strong></div>
+            <div style="color: #4b5563; font-size: 13px; font-weight: normal;">تم تحسين الصوت فيزيائياً ليعطي نبرة محادثة طبيعية مريحة وأقل روبوتية أثناء الشرح.</div>
+        </div>
+        <button id="audioGuideBtn" class="audio-btn">
+            <span>▶️ استمع للشرح المطور</span>
+        </button>
     </div>
 
-    <div class="simulation-container">
-        <div class="canvas-container">
-            <canvas id="transformerCanvas" width="550" height="340"></canvas>
+    <div class="panel">
+        <div class="panel-title">أولاً: اختر النواة المراد دراستها من القائمة</div>
+        <div class="form-group">
+            <select id="presetSelect"></select>
         </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">ثانياً: الرمز الكيميائي والصيغة النووية الصحيحة</div>
+        <div class="isotope-display" id="isotopeDisplay">-</div>
         
-        <div class="control-panel">
-            <h3>⚙️ لوحة التحكم بالتجربة</h3>
-            
-            <div class="control-group">
-                <label>جهد المصدر الكلي (V<sub>source</sub>): <span id="lblVp" style="color:var(--primary)">240</span> V</label>
-                <input type="range" id="slideVp" min="0" max="300" step="10" value="240" oninput="calculateTransformer()">
+        <h3 style="color: #475569; text-align: center; margin-top: 25px; margin-bottom: 10px; font-weight: bold;">المكونات الأساسية للنواة والكتلة الفعلية:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+            <div class="component-badge">
+                <label>عدد البروتونات (Z)</label>
+                <div id="badgeZ" class="number highlight-blue">-</div>
             </div>
-
-            <div class="control-group">
-                <label>عدد لفات الابتدائي (N<sub>p</sub>): <span id="lblNp" style="color:var(--success)">200</span> لفة</label>
-                <input type="range" id="slideNp" min="10" max="400" step="10" value="200" oninput="calculateTransformer()">
+            <div class="component-badge">
+                <label>عدد النيوترونات (N)</label>
+                <div id="badgeN" class="number highlight-purple">-</div>
             </div>
-
-            <div class="control-group">
-                <label>عدد لفات الثانوي (N<sub>s</sub>): <span id="lblNs" style="color:var(--danger)">50</span> لفة</label>
-                <input type="range" id="slideNs" min="10" max="400" step="10" value="50" oninput="calculateTransformer()">
+            <div class="component-badge">
+                <label>كتلة النواة الفعلية (u)</label>
+                <div id="badgeMass" class="number highlight-orange" style="font-size: 20px;">-</div>
             </div>
         </div>
     </div>
 
-    <div class="cards-grid">
-        <div class="card">
-            <h3>⚡ الطرف الابتدائي (Input)</h3>
-            <p>• جهد المصدر الكلي (V<sub>source</sub>): <span style="color: var(--primary);">240 V</span></p>
-            <p>• الجهد الفعلي للملف (V<sub>p</sub>): <span id="txtVin" style="color: var(--success);">--</span></p>
-            <p>• تيار الدخول الفرضي (I<sub>p</sub>): <span style="color: purple;">2.0 A</span></p>
-            <p>• القدرة الابتدائية الممررة (P<sub>p</sub>): <span id="txtPp" style="color: brown;">--</span></p>
-        </div>
-        <div class="card">
-            <h3>💡 الطرف الثانوي وحفظ الطاقة (Output)</h3>
-            <p>• جهد المخرج المستحث (V<sub>s</sub>): <span id="txtVs" style="color:var(--primary); font-size: 17px;">--</span></p>
-            <p>• تيار المخرج المحسوب (I<sub>s</sub>): <span id="txtIs" style="color: darkcyan; font-size: 17px;">--</span></p>
-            <p>• القدرة المستحثة الناتجة (P<sub>s</sub>): <span id="txtPs" style="color: brown;">--</span></p>
-            <p><span id="txtLightComparison" style="color: #856404; background: #fff3cd; padding: 6px; border-radius:4px; display:inline-block; width:95%; font-size:13px;">جاري حساب توزيع الطاقة...</span></p>
-        </div>
+    <div class="panel">
+        <div class="panel-title">ثالثاً: موقع النواة على منحنى طاقة الربط لكل نيوكليون (MeV)</div>
+        <canvas id="graphCanvas" width="850" height="400"></canvas>
     </div>
 
-    <div class="card" style="overflow-x: auto;">
-        <h3>📐 المعادلات الرياضية المقربة بالأرقام المعنوية</h3>
-        <table>
+    <div class="panel">
+        <div class="panel-title">رابعاً: خطوات الحسابات الفيزيائية الدقيقة للربط النووي</div>
+        <table class="results-table">
             <thead>
                 <tr>
-                    <th>حساب جهد المخرج المستحث</th>
-                    <th>حساب تيار المخرج (علاقة عكسية)</th>
-                    <th>مبدأ حفظ القدرة (المحول المثالي)</th>
+                    <th>الخطوة الفيزيائية</th>
+                    <th>طريقة الحساب الرياضية</th>
+                    <th>النتيجة والقيمة الدقيقة</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><span id="formulaStep">--</span></td>
-                    <td><span id="formulaCurrent">--</span></td>
-                    <td><mark id="formulaPower" style="font-weight: 900; padding: 2px 8px; background-color: #d4edda; color: #155724;">--</mark></td>
+                    <td>كتلة المكونات وهي حرة (متفرقة)</td>
+                    <td>(Z &times; m<sub>p</sub>) + (N &times; m<sub>n</sub>)</td>
+                    <td id="resConstituentsMass">-</td>
+                </tr>
+                <tr>
+                    <td>النقص في الكتلة (&Delta;m)</td>
+                    <td>كتلة المكونات حرة - كتلة النواة الفعلية</td>
+                    <td id="resMassDefect" class="highlight-orange">-</td>
+                </tr>
+                <tr>
+                    <td>طاقة الربط النووي الإجمالية (E<sub>b</sub>)</td>
+                    <td>E<sub>b</sub> = &Delta;m &times; 931.5 MeV</td>
+                    <td id="resEbMeV" class="highlight-green">-</td>
+                </tr>
+                <tr>
+                    <td>طاقة الربط النووي الإجمالية بالجول (J)</td>
+                    <td>E<sub>b</sub>(MeV) &times; 1.60218 &times; 10<sup>-13</sup></td>
+                    <td id="resEbJoules" style="direction: ltr;">-</td>
+                </tr>
+                <tr>
+                    <td>طاقة الربط النووي لكل نيوكليون (E<sub>b</sub> / A)</td>
+                    <td>طاقة الربط الإجمالية &divide; العدد الكتلي A</td>
+                    <td id="resEbPerA" style="font-size: 18px; font-weight: bold; color: #b91c1c;">-</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="quiz-section">
-        <h3 style="color: #856404; border-bottom: 2px solid #ffeeba; padding-bottom: 10px;">🎯 بنك الأسئلة الوزارية الذكي المتنوع (معرفي - استدلالي - تطبيقي)</h3>
-        <p id="quizQuestion" style="font-size: 17px; line-height: 1.6;">جاري إعداد سؤال ذكي ومختلف...</p>
-        <div class="options-container" id="quizOptions"></div>
-        <div class="feedback" id="quizFeedback"></div>
-        
-        <div style="text-align: center; margin-top: 25px; display: none;" id="nextQuestionContainer">
-            <button class="btn btn-next" onclick="generateQuizQuestion()">🎯 اضغط هنا للانتقال للسؤال التالي</button>
+    <div class="panel">
+        <div class="panel-title">خامساً: النشاط التقييمي الصفي (اضغط بالأسفل لتوليد أسئلة عشوائية مختلفة وجديدة تماماً)</div>
+        <div class="quiz-container">
+            
+            <div class="quiz-block">
+                <div class="quiz-question" id="q1Text">جاري إعداد صيغة السؤال الأول...</div>
+                <div class="quiz-options" id="q1Options"></div>
+            </div>
+            
+            <div class="quiz-block">
+                <div class="quiz-question" id="q2Text">جاري إعداد صيغة السؤال الثاني...</div>
+                <div class="quiz-options" id="q2Options"></div>
+            </div>
+            
+            <div class="quiz-feedback" id="quizFeedback"></div>
+            
+            <button id="refreshQuizBtn" class="refresh-quiz-btn">🔄 توليد أسئلة عشوائية جديدة</button>
         </div>
     </div>
 
-    <footer>
-        المختبر الافتراضي المطور تماشياً مع رؤية عمان التعليمية | إشراف: الأستاذ أنور البلوشي | 📱 هاتف: 92818606
-    </footer>
+    <div class="credits">
+        👨‍🏫 عمل الأستاذ: أنور البلوشي | 📱 هاتف: 92818606 | مادة الفيزياء - سلطنة عمان
+    </div>
 </div>
 
 <script>
-    const canvas = document.getElementById('transformerCanvas');
-    const ctx = canvas.getContext('2d');
+const presetSelect = document.getElementById('presetSelect');
+const canvas = document.getElementById('graphCanvas');
+const ctx = canvas.getContext('2d');
+const audioGuideBtn = document.getElementById('audioGuideBtn');
+const refreshQuizBtn = document.getElementById('refreshQuizBtn');
+
+const mp = 1.007276;
+const mn = 1.008665;
+
+let isPlayingGuide = false;
+let speechQueue = [];
+let currentQueueIndex = 0;
+
+const isotopesData = [
+    {z:1, a:2, m:2.013553, s:"H", name:"الهيدروجين-2"},
+    {z:1, a:3, m:3.016049, s:"H", name:"الهيدروجين-3"},
+    {z:2, a:3, m:3.016029, s:"He", name:"الهيليوم-3"},
+    {z:2, a:4, m:4.002603, s:"He", name:"الهيليوم-4"},
+    {z:3, a:6, m:6.015122, s:"Li", name:"الليثيوم-6"},
+    {z:3, a:7, m:7.016004, s:"Li", name:"الليثيوم-7"},
+    {z:4, a:9, m:9.012182, s:"Be", name:"البريليوم-9"},
+    {z:5, a:10, m:10.012937, s:"B", name:"البورون-10"},
+    {z:5, a:11, m:11.009305, s:"B", name:"البورون-11"},
+    {z:6, a:12, m:12.000000, s:"C", name:"الكربون-12"},
+    {z:6, a:13, m:13.003355, s:"C", name:"الكربون-13"},
+    {z:6, a:14, m:14.003241, s:"C", name:"الكربون-14"},
+    {z:7, a:14, m:14.003074, s:"N", name:"النيتروجين-14"},
+    {z:7, a:15, m:15.000108, s:"N", name:"النيتروجين-15"},
+    {z:8, a:16, m:15.994915, s:"O", name:"الأكسجين-16"},
+    {z:8, a:17, m:16.999131, s:"O", name:"الأكسجين-17"},
+    {z:8, a:18, m:17.999160, s:"O", name:"الأكسجين-18"},
+    {z:9, a:19, m:18.998403, s:"F", name:"الفلور-19"},
+    {z:10, a:20, m:19.992440, s:"Ne", name:"النيون-20"},
+    {z:26, a:56, m:55.934937, s:"Fe", name:"الحديد-56"},
+    {z:36, a:92, m:91.926156, s:"Kr", name:"الكربتون-92"},
+    {z:38, a:88, m:87.905612, s:"Sr", name:"السترونشيوم-88"},
+    {z:56, a:138, m:137.905247, s:"Ba", name:"الباريوم-138"},
+    {z:92, a:235, m:235.043929, s:"U", name:"اليورانيوم-235"},
+    {z:92, a:238, m:238.050788, s:"U", name:"اليورانيوم-238"}
+];
+
+let q1CorrectAnswer = null;
+let q2CorrectAnswer = null;
+let q1Selected = null;
+let q2Selected = null;
+
+function populateSelect() {
+    presetSelect.innerHTML = "";
+    isotopesData.forEach((iso, index) => {
+        let opt = document.createElement('option');
+        opt.value = index;
+        opt.text = `${iso.name} [${iso.s}]`;
+        if(iso.z === 26 && iso.a === 56) opt.selected = true;
+        presetSelect.appendChild(opt);
+    });
+}
+
+function speakNaturalConversation(paragraphs) {
+    window.speechSynthesis.cancel(); 
+    speechQueue = paragraphs;
+    currentQueueIndex = 0;
+    playNextInQueue();
+}
+
+function playNextInQueue() {
+    if (currentQueueIndex >= speechQueue.length) {
+        isPlayingGuide = false;
+        audioGuideBtn.innerHTML = "<span>▶️ استمع للشرح المطور</span>";
+        audioGuideBtn.className = "audio-btn";
+        return;
+    }
+
+    let text = speechQueue[currentQueueIndex];
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ar-SA';
+    utterance.pitch = 0.70; 
+    utterance.rate = 0.88;  
+
+    utterance.onend = () => {
+        currentQueueIndex++;
+        setTimeout(playNextInQueue, 400); 
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
+function sayFeedbackNatural(text) {
+    try {
+        let u = new SpeechSynthesisUtterance(text);
+        u.lang = 'ar-SA';
+        u.pitch = 0.70;
+        u.rate = 0.92;
+        window.speechSynthesis.speak(u);
+    } catch(e){}
+}
+
+function playClapEffect() {
+    try {
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                let osc = audioCtx.createGain();
+                let node = audioCtx.createOscillator();
+                node.type = 'triangle';
+                node.frequency.setValueAtTime(130 + Math.random()*70, audioCtx.currentTime);
+                node.connect(osc);
+                osc.connect(audioCtx.destination);
+                osc.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                osc.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.08);
+                node.start();
+                node.stop(audioCtx.currentTime + 0.08);
+            }, i * 60);
+        }
+    } catch(e){}
+}
+
+function createInlineIsotopeHTML(A, Z, symbol) {
+    return `<span class="isotope-inline"><span class="nuclear-numbers-inline"><span>${A}</span><span>${Z}</span></span>${symbol}</span>`;
+}
+
+function calculateAndDraw() {
+    const selectedIndex = presetSelect.value;
+    const iso = isotopesData[selectedIndex];
     
-    let Vsource, Np, Ns, Vin, Vs, VbulbB;
-    let Ip = 2.0; 
-    let Is, Pp, Ps;
-    let fluxOffset = 0;
-    let rayAnimationCounter = 0;
-
-    let currentQuizType = ""; 
-    let quizDetails = {};
-
-    const correctPhrases = ["أَسْمِيكَ ذِيبْ!", "كَفُؤْ عَلَيْكْ!", "أَنْتَ رَائِعْ!", "كُلَّ يَوْمٍ تَعَالْ!"];
-    const wrongPhrases = ["وَأَبُويَ عَلَيْكْ، سِيرْ الْعَبْ!", "يِبَالِكَ ضَرْبْ، رَكِّزْ!", "يَا خَرَابِي، أَعِدِ الْمُحَاوَلَةَ!", "لُزُومْ نَعْلَمْ الشَّيْخَ بِالسَّالِفَةِ!"];
-
-    function calculateTransformer() {
-        Vsource = parseInt(document.getElementById('slideVp').value);
-        Np = parseInt(document.getElementById('slideNp').value);
-        Ns = parseInt(document.getElementById('slideNs').value);
-
-        document.getElementById('lblVp').innerText = Vsource;
-        document.getElementById('lblNp').innerText = Np;
-        document.getElementById('lblNs').innerText = Ns;
-
-        if (Vsource === 0) {
-            VbulbB = 0; Vin = 0; Vs = 0; Is = 0; Pp = 0; Ps = 0;
-        } else {
-            VbulbB = Math.round(Vsource * 0.25); 
-            Vin = Vsource - VbulbB; 
-            
-            // تطبيق التقريب لمنع ظهور أرقام لانهائية مراعاة للأرقام المعنوية
-            Vs = parseFloat(((Vin * Ns) / Np).toFixed(1)); 
-            Is = parseFloat(((Vin * Ip) / (Vs === 0 ? 1 : Vs)).toFixed(1));
-            
-            Pp = parseFloat((Vin * Ip).toFixed(1));
-            Ps = parseFloat((Vs * Is).toFixed(1));
-        }
-
-        document.getElementById('txtVin').innerText = Vin + " V";
-        document.getElementById('txtVs').innerText = Vs + " V";
-        document.getElementById('txtIs').innerText = Is + " A";
-        document.getElementById('txtPp').innerText = Pp + " W";
-        document.getElementById('txtPs').innerText = Ps + " W";
-
-        let lightCompare = "";
-        if (Vsource === 0) {
-            lightCompare = "المصدر متوقف تماماً عن إمداد الدائرة بالطاقة.";
-        } else if (Vs > Vin) {
-            lightCompare = `محول رافع للجهد: الجهد ارتفع والتيار انخفض لتبقى القدرة محفوظة وثابتة في الطرفين.`;
-        } else if (Vs < Vin) {
-            lightCompare = `محول خافض للجهد: الجهد انخفض والتيار ارتفع إلى ${Is} أمبير، مما يجعل توهج المصباح الثانوي قوياً جداً وثابتاً.`;
-        } else {
-            lightCompare = `محول عازل: تتطابق مقادير الجهد والتيار والقدرة تماماً في الجانبين.`;
-        }
-        document.getElementById('txtLightComparison').innerText = lightCompare;
-
-        document.getElementById('formulaStep').innerText = `Vs = (${Vin} × ${Ns}) / ${Np} = ${Vs} V`;
-        document.getElementById('formulaCurrent').innerText = `Is = (${Vin} × ${Ip}) / ${Vs === 0 ? 1 : Vs} = ${Is} A`;
-        document.getElementById('formulaPower').innerText = `Pp (${Pp} W) = Ps (${Ps} W)`;
-    }
-
-    function drawSimulation() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const coreX = 180, coreY = 70, coreW = 220, coreH = 180, thickness = 35;
-
-        drawCoilLayer(coreX, coreY, thickness, coreH, Np, true, 'primary');
-        drawCoilLayer(coreX + coreW - thickness, coreY, thickness, coreH, Ns, true, 'secondary');
-
-        ctx.strokeStyle = '#4e5d6c';
-        ctx.lineWidth = 4;
-        ctx.fillStyle = '#cfd8dc'; 
-        ctx.beginPath();
-        ctx.rect(coreX, coreY, coreW, coreH);
-        ctx.rect(coreX + thickness, coreY + thickness, coreW - (thickness*2), coreH - (thickness*2));
-        ctx.fill('evenodd');
-        ctx.stroke();
-
-        if (Vin > 0) {
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'rgba(255, 69, 0, ' + (Math.sin(fluxOffset) * 0.7 + 0.3) + ')';
-            ctx.setLineDash([8, 8]);
-            ctx.strokeRect(coreX + thickness/2, coreY + thickness/2, coreW - thickness, coreH - thickness);
-            ctx.setLineDash([]);
-        }
-
-        drawCoilLayer(coreX, coreY, thickness, coreH, Np, false, 'primary');
-        drawCoilLayer(coreX + coreW - thickness, coreY, thickness, coreH, Ns, false, 'secondary');
-
-        ctx.strokeStyle = '#111';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.moveTo(40, 160); ctx.lineTo(40, 95); ctx.lineTo(90, 95);
-        ctx.moveTo(150, 95); ctx.lineTo(coreX, 95);
-        ctx.moveTo(coreX, 225); ctx.lineTo(40, 225); ctx.lineTo(40, 190);
-        ctx.stroke();
-
-        let factorB = VbulbB / 100;
-        drawPhETBulb(120, 95, "B (الابتدائي)", factorB);
-
-        ctx.beginPath(); ctx.arc(40, 175, 15, 0, Math.PI*2); ctx.fillStyle = "#fff"; ctx.fill(); ctx.stroke();
-        ctx.fillStyle = "#000"; ctx.font = 'bold 11px Tahoma'; ctx.fillText("~", 37, 179);
-        ctx.fillText(`المصدر: ${Vsource}V`, 10, 210);
-
-        ctx.beginPath();
-        ctx.moveTo(coreX + coreW, 95); ctx.lineTo(470, 95); ctx.lineTo(470, 120);
-        ctx.moveTo(coreX + coreW, 225); ctx.lineTo(470, 225); ctx.lineTo(470, 180);
-        ctx.stroke();
-
-        let factorA = Is / 6;
-        drawPhETBulb(470, 150, "A (الثانوي)", factorA);
-        
-        ctx.fillStyle = '#000';
-        ctx.font = 'bold 13px Tahoma';
-        ctx.fillText(`Vs = ${Vs}V`, 440, 270);
-        ctx.fillStyle = 'var(--success)';
-        ctx.fillText(`Vin = ${Vin}V`, 195, 280);
-
-        fluxOffset += 0.08;
-        rayAnimationCounter += 0.05;
-        requestAnimationFrame(drawSimulation);
-    }
-
-    function drawCoilLayer(x, y, w, h, turns, isBack, type) {
-        let visualTurns = Math.max(2, Math.min(16, Math.floor(turns / 25)));
-        if (turns <= 20) visualTurns = 2;
-        if (turns > 20 && turns <= 50) visualTurns = 3;
-
-        ctx.strokeStyle = '#b87333'; 
-        ctx.lineWidth = 4.5;
-
-        let startY = y + 15;
-        let endY = y + h - 15;
-        let spacing = (endY - startY) / visualTurns;
-
-        for (let i = 0; i < visualTurns; i++) {
-            let currY = startY + (i * spacing);
-            ctx.beginPath();
-            if (isBack) {
-                if (type === 'primary') {
-                    ctx.moveTo(x, currY);
-                    ctx.quadraticCurveTo(x - 12, currY + spacing/2, x, currY + spacing);
-                } else {
-                    ctx.moveTo(x + w, currY);
-                    ctx.quadraticCurveTo(x + w + 12, currY + spacing/2, x + w, currY + spacing);
-                }
-            } else {
-                ctx.moveTo(type === 'primary' ? x : x + w, currY);
-                ctx.lineTo(type === 'primary' ? x + w : x, currY + spacing/2);
-            }
-            ctx.stroke();
-        }
-    }
-
-    function drawPhETBulb(x, y, label, factor) {
-        factor = Math.max(0, Math.min(1.3, factor));
-
-        if (factor > 0.05) {
-            let radiusGlow = 12 + (factor * 30);
-            let gradient = ctx.createRadialGradient(x, y, 3, x, y, radiusGlow);
-            gradient.addColorStop(0, `rgba(255, 235, 59, ${factor * 0.8})`);
-            gradient.addColorStop(1, 'rgba(255,255,255,0)');
-            ctx.fillStyle = gradient;
-            ctx.beginPath(); ctx.arc(x, y, radiusGlow, 0, Math.PI*2); ctx.fill();
-
-            ctx.strokeStyle = `rgba(255, 193, 7, ${factor * 0.9})`;
-            ctx.lineWidth = 2.5;
-            let numberOfRays = 10;
-            let pulse = Math.sin(rayAnimationCounter * 3) * 2.5; 
-            let minRayLength = 15 + (factor * 30) + pulse;
-
-            for (let i = 0; i < numberOfRays; i++) {
-                let angle = (i * Math.PI * 2) / numberOfRays;
-                let startX = x + Math.cos(angle) * 12;
-                let startY = y + Math.sin(angle) * 12;
-                let endX = x + Math.cos(angle) * minRayLength;
-                let endY = y + Math.sin(angle) * minRayLength;
-
-                ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(endX, endY); ctx.stroke();
-            }
-        }
-
-        ctx.strokeStyle = '#222';
-        ctx.lineWidth = 2;
-        ctx.fillStyle = factor > 0.05 ? `rgba(255, 241, 118, ${0.4 + factor * 0.6})` : '#ffffff';
-        ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-        
-        ctx.beginPath();
-        ctx.moveTo(x - 6, y - 6); ctx.lineTo(x + 6, y + 6);
-        ctx.moveTo(x + 6, y - 6); ctx.lineTo(x - 6, y + 6);
-        ctx.stroke();
-
-        ctx.fillStyle = '#000';
-        ctx.font = 'bold 11px Tahoma';
-        ctx.fillText(label, x - 30, y - 18);
-    }
-
-    function speakDynamicValues() {
-        window.speechSynthesis.cancel();
-        let explanation = `مرحباً بكم، معكم شرح البرنامج. لاحظ يا طلابي الأعزاء، أنه عند خفض الجهد ` +
-                          `في الطرف الثانوي، يرتفع تيار المخرج تلقائياً ليبلغ ${Is} أمبير، ` +
-                          `وذلك للحفاظ على ثبات القدرة الكهربائية في كلا الطرفين، حيث تبلغ القدرة الآن ${Pp} واط، محققةً قانون حفظ الطاقة.`;
-        
-        let utterance = new SpeechSynthesisUtterance(explanation);
-        utterance.lang = 'ar-OM';
-        utterance.rate = 0.85; 
-        window.speechSynthesis.speak(utterance);
-    }
-
-    let quizCorrectAnswer = "";
+    let n = iso.a - iso.z; 
     
-    function generateQuizQuestion() {
-        document.getElementById('quizFeedback').innerText = "";
-        document.getElementById('nextQuestionContainer').style.display = "none"; 
-        
-        const randomPattern = Math.floor(Math.random() * 4) + 1;
-        let questionText = "";
-        let options = [];
-        quizDetails = {};
+    document.getElementById('badgeZ').innerText = iso.z;
+    document.getElementById('badgeN').innerText = n;
+    document.getElementById('badgeMass').innerText = iso.m.toFixed(6);
+    
+    let mConstituents = (iso.z * mp) + (n * mn); 
+    let deltaM = mConstituents - iso.m; 
+    if (deltaM < 0) deltaM = 0; 
+    
+    let eb = deltaM * 931.5; 
+    let ebJoules = eb * 1.60218e-13; 
+    let ebPerA = eb / iso.a; 
+    
+    document.getElementById('isotopeDisplay').innerHTML = `
+        <span class="isotope-box">
+            <span class="nuclear-numbers">
+                <span>${iso.a}</span>
+                <span>${iso.z}</span>
+            </span>
+            ${iso.s}
+        </span>
+    `;
+    
+    document.getElementById('resConstituentsMass').innerText = mConstituents.toFixed(6) + " u";
+    document.getElementById('resMassDefect').innerText = deltaM.toFixed(6) + " u";
+    document.getElementById('resEbMeV').innerText = eb.toFixed(4) + " MeV";
+    document.getElementById('resEbJoules').innerText = ebJoules.toExponential(5) + " J";
+    document.getElementById('resEbPerA').innerText = ebPerA.toFixed(4) + " MeV / nucleon";
+    
+    drawGraph(iso.a, ebPerA, iso.s);
+    buildCompletelyRandomQuiz(selectedIndex); 
+}
 
-        if (randomPattern === 1) {
-            currentQuizType = "current_calc";
-            let v1 = [100, 200, 120][Math.floor(Math.random() * 3)];
-            let ratio = [2, 4, 0.5][Math.floor(Math.random() * 3)];
-            let v2 = v1 * ratio;
-            let i1 = 4;
-            // ضمان ضبط الأرقام المعنوية في بنك الأسئلة والاختيارات أيضاً لقيم مقربة ونظيفة
-            let i2 = parseFloat((i1 / ratio).toFixed(1));
+function buildCompletelyRandomQuiz(currentDeviceIndex) {
+    q1Selected = null;
+    q2Selected = null;
+    document.getElementById('quizFeedback').innerText = "";
 
-            questionText = `[سؤال تطبيقي]: محول كهربائي مثالي، الجهد في ملفه الابتدائي Vp = ${v1} V وجهده الثانوي Vs = ${v2} V. إذا كان تيار الملف الابتدائي Ip = ${i1} A، كم تبلغ شدة تيار الملف الثانوي (Is)؟`;
-            quizCorrectAnswer = `${i2} أمبير`;
-            options = [`${i2} أمبير`, `${parseFloat((i1 * ratio).toFixed(1))} أمبير`, `${parseFloat((v1 / i1).toFixed(1))} أمبير`, `${v2} أمبير`];
-            quizDetails = { v1: v1, v2: v2, i1: i1, i2: i2, ratio: ratio };
+    let idx1 = Math.floor(Math.random() * isotopesData.length);
+    if(idx1 == currentDeviceIndex) idx1 = (idx1 + 3) % isotopesData.length;
+    const randomIso1 = isotopesData[idx1];
+    
+    let n1 = randomIso1.a - randomIso1.z;
+    let trueEb1 = ((randomIso1.z * mp) + (n1 * mn) - randomIso1.m) * 931.5;
+    if(trueEb1 < 0) trueEb1 = 0;
+    
+    q1CorrectAnswer = trueEb1.toFixed(2);
+    
+    let inlineIsotope1 = createInlineIsotopeHTML(randomIso1.a, randomIso1.z, randomIso1.s);
+    document.getElementById('q1Text').innerHTML = `❓ <strong>السؤال الأول:</strong> إذا علمت أن الكتلة الفعلية لنواة النظير ${inlineIsotope1} تساوي <strong>${randomIso1.m.toFixed(6)} u</strong>، احسب قيمة <strong>طاقة الربط النووي الإجمالية (E<sub>b</sub>)</strong> لها بوحدة (MeV)؟`;
+    
+    let q1Options = [
+        q1CorrectAnswer,
+        (trueEb1 + 24.4).toFixed(2),
+        (trueEb1 - 19.2).toFixed(2),
+        (trueEb1 * 0.75).toFixed(2)
+    ].sort(() => Math.random() - 0.5);
 
-        } else if (randomPattern === 2) {
-            currentQuizType = "power_conservation";
-            let powerVal = [120, 250, 500, 300][Math.floor(Math.random() * 4)];
-
-            questionText = `[سؤال استدلالي]: يتصل الملف الابتدائي لمحول رافع ومثالي بمصدر قدرة كهربائية مقدارها Pp = ${powerVal} W. إذا علمنا أن الجهد الثانوي ضعف الجهد الابتدائي، كم تكون القدرة الكهربائية الناتجة في الملف الثانوي (Ps)؟`;
-            quizCorrectAnswer = `${powerVal} واط`;
-            options = [`${powerVal} واط`, `${powerVal * 2} واط`, `${Math.round(powerVal / 2)} واط`, `صفر واط`];
-            quizDetails = { powerVal: powerVal };
-
-        } else if (randomPattern === 3) {
-            currentQuizType = "transformer_type";
-            let i1 = 2; let i2 = 8;
-
-            questionText = `[سؤال معرفي استدلالي]: إذا لاحظت في معمل الفيزياء أن تيار الملف الثانوي لمحول كهربائي (Is = ${i2} A) أكبر بكثير من تيار الملف الابتدائي (Ip = ${i1} A)، فما هو نوع هذا المحول وماذا يحدث لجهده؟`;
-            quizCorrectAnswer = `محول خافض للجهد، لأن تيار الثانوي يزداد عندما يقل الجهد`;
-            options = [
-                `محول خافض للجهد، لأن تيار الثانوي يزداد عندما يقل الجهد`,
-                `محول رافع للجهد، لأن التيار يتبع الجهد طردياً`,
-                `محول عازل، لأن القدرة الكهربائية تضاعفت`,
-                `محول يحتاج لمصدر مستمر ليعمل`
-            ];
-            quizDetails = { i1: i1, i2: i2 };
-
-        } else {
-            currentQuizType = "series_vin";
-            const vSources = [200, 300, 160, 240, 120];
-            let qVsource = vSources[Math.floor(Math.random() * vSources.length)];
-            let qVbulb = Math.round(qVsource * 0.25);
-            let qVin = qVsource - qVbulb;
-
-            questionText = `[سؤال تطبيقي مركّب]: إذا كان جهد المصدر الكلي بدائرة التوالي V_source = ${qVsource} V، ويستهلك المصباح الأول (B) جهداً قدره V_bulb = ${qVbulb} V، كم يكون مقدار الجهد الفعلي الداخل للملف الابتدائي (V_in) لتوليد الحث؟`;
-            quizCorrectAnswer = `${qVin} فولت`;
-            options = [`${qVin} فولت`, `${qVsource} فولت`, `${qVbulb} فولت`, `${qVsource + qVbulb} فولت`];
-            quizDetails = { source: qVsource, bulb: qVbulb, vin: qVin };
-        }
-
-        document.getElementById('quizQuestion').innerText = questionText;
-        options.sort(() => Math.random() - 0.5);
-
-        let container = document.getElementById('quizOptions');
-        container.innerHTML = "";
-        options.forEach(opt => {
-            let b = document.createElement('button');
-            b.className = 'option-btn';
-            b.innerText = opt;
-            b.onclick = function() { checkQuizAnswer(opt, b); };
-            container.appendChild(b);
+    const q1Container = document.getElementById('q1Options');
+    q1Container.innerHTML = "";
+    q1Options.forEach(opt => {
+        let btn = document.createElement('button');
+        btn.className = "option-btn";
+        btn.innerText = opt + " MeV";
+        btn.addEventListener('click', () => {
+            Array.from(q1Container.children).forEach(b => b.className = "option-btn");
+            q1Selected = opt;
+            if(opt === q1CorrectAnswer) btn.className = "option-btn selected-correct";
+            else btn.className = "option-btn selected-wrong";
+            evaluateSingleQuestion(opt, q1CorrectAnswer);
         });
-    }
+        q1Container.appendChild(btn);
+    });
 
-    function checkQuizAnswer(selected, clickedButton) {
-        let f = document.getElementById('quizFeedback');
+    let idx2 = Math.floor(Math.random() * isotopesData.length);
+    if(idx2 == currentDeviceIndex || idx2 == idx1) idx2 = (idx2 + 4) % isotopesData.length;
+    const randomIso2 = isotopesData[idx2];
+    
+    let n2 = randomIso2.a - randomIso2.z;
+    let trueEb2 = ((randomIso2.z * mp) + (n2 * mn) - randomIso2.m) * 931.5;
+    let trueEbPerA2 = trueEb2 / randomIso2.a;
+    if(trueEbPerA2 < 0) trueEbPerA2 = 0;
+
+    q2CorrectAnswer = trueEbPerA2.toFixed(2);
+    
+    let inlineIsotope2 = createInlineIsotopeHTML(randomIso2.a, randomIso2.z, randomIso2.s);
+    document.getElementById('q2Text').innerHTML = `❓ <strong>السؤال الثاني:</strong> إذا علمت أن طاقة الربط النووي الكلية لنواة ${inlineIsotope2} تساوي <strong>${trueEb2.toFixed(4)} MeV</strong>، أوجد <strong>طاقة الربط لكل نيوكليون</strong> لها؟`;
+    
+    let q2Options = [
+        q2CorrectAnswer,
+        (trueEbPerA2 + 1.35).toFixed(2),
+        (trueEbPerA2 - 0.75).toFixed(2),
+        (trueEbPerA2 * 0.6).toFixed(2)
+    ].sort(() => Math.random() - 0.5);
+
+    const q2Container = document.getElementById('q2Options');
+    q2Container.innerHTML = "";
+    q2Options.forEach(opt => {
+        let btn = document.createElement('button');
+        btn.className = "option-btn";
+        btn.innerText = opt + " MeV/nucleon";
+        btn.addEventListener('click', () => {
+            Array.from(q2Container.children).forEach(b => b.className = "option-btn");
+            q2Selected = opt;
+            if(opt === q2CorrectAnswer) btn.className = "option-btn selected-correct";
+            else btn.className = "option-btn selected-wrong";
+            evaluateSingleQuestion(opt, q2CorrectAnswer);
+        });
+        q2Container.appendChild(btn);
+    });
+}
+
+function evaluateSingleQuestion(selected, correct) {
+    const feedback = document.getElementById('quizFeedback');
+    if (selected === correct) {
+        feedback.innerText = "👏 برافو! إجابة صحيحة وممتازة.";
+        feedback.style.color = "#16a34a";
+        playClapEffect();
+        setTimeout(() => { sayFeedbackNatural("برافو! إجابة صحيحة"); }, 200);
+    } else {
+        feedback.innerText = "❌ حاول من جديد! راجع الحسابات بدقة.";
+        feedback.style.color = "#dc2626";
+        setTimeout(() => { sayFeedbackNatural("حاول من جديد"); }, 200);
+    }
+}
+
+function drawGraph(currentA, currentEbPerA, currentSymbol) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const padding = 60;
+    const graphWidth = canvas.width - padding * 2;
+    const graphHeight = canvas.height - padding * 2;
+    
+    function getX(aValue) { return padding + (aValue / 260) * graphWidth; }
+    function getY(ebValue) { return canvas.height - padding - (ebValue / 10) * graphHeight; }
+    
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    for(let i=20; i<=260; i+=20) {
+        ctx.beginPath(); ctx.moveTo(getX(i), getY(0)); ctx.lineTo(getX(i), getY(10)); ctx.stroke();
+    }
+    for(let j=1; j<=10; j++) {
+        ctx.beginPath(); ctx.moveTo(getX(0), getY(j)); ctx.lineTo(getX(260), getY(j)); ctx.stroke();
+    }
+    
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(padding, padding - 10);
+    ctx.lineTo(padding, canvas.height - padding);
+    ctx.lineTo(canvas.width - padding + 10, canvas.height - padding);
+    ctx.stroke();
+    
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 13px Arial"; 
+    ctx.textAlign = "center";
+    ctx.fillText("عدد النيوكليونات (العدد الكتلي A)", canvas.width/2, canvas.height - 15);
+    
+    ctx.save();
+    ctx.translate(20, canvas.height/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("طاقة الربط لكل نيوكليون (MeV)", 0, 0);
+    ctx.restore();
+    
+    ctx.font = "bold 11px Arial"; 
+    ctx.fillStyle = "#64748b";
+    for(let i=0; i<=240; i+=40) {
+        ctx.fillText(i, getX(i), canvas.height - padding + 18);
+    }
+    ctx.textAlign = "right";
+    for(let j=0; j<=10; j+=2) {
+        ctx.fillText(j, padding - 10, getY(j) + 4);
+    }
+    
+    const curvePoints = [
+        {a: 0, e: 0}, {a: 2, e: 1.11}, {a: 3, e: 2.57}, {a: 4, e: 7.07},
+        {a: 6, e: 5.3}, {a: 12, e: 7.68}, {a: 16, e: 7.98}, {a: 40, e: 8.55},
+        {a: 56, e: 8.8}, {a: 100, e: 8.6}, {a: 150, e: 8.3}, {a: 200, e: 7.8},
+        {a: 238, e: 7.6}, {a: 260, e: 7.4}
+    ];
+    
+    ctx.strokeStyle = "#0284c7";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(getX(curvePoints[0].a), getY(curvePoints[0].e));
+    for (let i = 1; i < curvePoints.length; i++) {
+        ctx.lineTo(getX(curvePoints[i].a), getY(curvePoints[i].e));
+    }
+    ctx.stroke();
+    
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 1.5;
+    ctx.font = "bold italic 11px Arial"; 
+    ctx.fillStyle = "#0f172a";
+    
+    ctx.beginPath();
+    ctx.moveTo(getX(10), getY(3)); ctx.lineTo(getX(15), getY(5.5));
+    ctx.stroke();
+    ctx.fillText("اندماج ↑", getX(22), getY(3.5));
+    
+    ctx.beginPath();
+    ctx.moveTo(getX(220), getY(7.65)); ctx.lineTo(getX(130), getY(8.2));
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(getX(130), getY(8.2)); ctx.lineTo(getX(136), getY(8.0));
+    ctx.moveTo(getX(130), getY(8.2)); ctx.lineTo(getX(136), getY(8.4));
+    ctx.stroke();
+    ctx.fillText("← انشطار", getX(180), getY(7.5));
+
+    if (currentA > 0 && currentEbPerA >= 0) {
+        let posX = getX(currentA);
+        let posY = getY(currentEbPerA);
+        
+        ctx.beginPath();
+        ctx.arc(posX, posY, 12, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220, 38, 38, 0.25)";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(posX, posY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#dc2626";
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        
+        ctx.fillStyle = "#b91c1c";
+        ctx.font = "bold 14px Arial"; 
+        ctx.textAlign = "left";
+        ctx.fillText(` ${currentSymbol}-${currentA} (${currentEbPerA.toFixed(2)})`, posX + 8, posY - 8);
+    }
+}
+
+audioGuideBtn.addEventListener('click', () => {
+    if(!isPlayingGuide) {
+        isPlayingGuide = true;
+        audioGuideBtn.innerHTML = "<span>🛑 إيقاف الشرح الصوتي</span>";
+        audioGuideBtn.className = "audio-btn playing";
+        
+        const paragraphs = [
+            "مرحباً بكم يا شباب.. في مختبر الفيزياء التفاعلي للأستاذ أنور البلوشي.",
+            "اليوم.. سنتحدث عن مفهوم جوهري في الاستقرار النووي.. وهو منحنى طاقة الربط لكل نيوكليون.",
+            "بمجرد اختياركم لأي نواة من القائمة.. ستلاحظون تفكيك مكوناتها من بروتونات ونيوترونات أسفل الرمز مباشرة.",
+            "وسيقوم التطبيق.. بإسقاط موقعها كعلامة حمراء مميزة على المنحنى البياني.",
+            "تذكروا القاعدة دائماً.. الأنوية الخفيفة في يسار المخطط تميل للاندماج لتصبح أكثر ترابطاً.. بينما الأنوية الثقيلة في اليمين تميل للإنشطار.",
+            "وتظل نواة الحديد ستة وخمسين.. هي النواة الأكثر استقراراً في الطبيعة.",
+            "الآن.. خذوا دقيقة لتأمل الحسابات.. ثم اختبروا أنفسكم في أسئلة التحدي بالأسفل.. وبالتوفيق لكم جميعاً."
+        ];
+        
+        speakNaturalConversation(paragraphs);
+    } else {
+        isPlayingGuide = false;
         window.speechSynthesis.cancel();
-        
-        let allButtons = document.querySelectorAll('.option-btn');
-        allButtons.forEach(btn => btn.disabled = true);
-
-        if (selected === quizCorrectAnswer) {
-            let randomCorrect = correctPhrases[Math.floor(Math.random() * correctPhrases.length)];
-            clickedButton.style.backgroundColor = "#d4edda";
-            clickedButton.style.borderColor = "var(--success)";
-            
-            f.innerHTML = `<span style='color:var(--success); font-weight:900;'>👏 ${randomCorrect} إجابتك صحيحة مئة بالمئة.</span>`;
-            triggerAudioEffect(true, randomCorrect);
-            
-            document.getElementById('nextQuestionContainer').style.display = "block";
-        } else {
-            let randomWrong = wrongPhrases[Math.floor(Math.random() * wrongPhrases.length)];
-            clickedButton.style.backgroundColor = "#f8d7da";
-            clickedButton.style.borderColor = "var(--danger)";
-            
-            let solutionHTML = "";
-            if (currentQuizType === "current_calc") {
-                solutionHTML = `
-                    <div class="solution-box">
-                        <strong>💡 طريقة الحل الصحيحة بالأرقام المعنوية:</strong><br>
-                        • العلاقة بين الجهد والتيار هي <strong>علاقة عكسية</strong> لثبات القدرة.<br>
-                        • القانون المستخدم: <code>(Vp / Vs) = (Is / Ip)</code><br>
-                        • بالتعويض: <code>(${quizDetails.v1} / ${quizDetails.v2}) = (Is / ${quizDetails.i1})</code><br>
-                        • إذن بالتقريب الرياضي: <code>Is = (${quizDetails.v1} × ${quizDetails.i1}) / ${quizDetails.v2} = <mark>${quizDetails.i2} أمبير</mark></code>.
-                    </div>`;
-            } else if (currentQuizType === "power_conservation") {
-                solutionHTML = `
-                    <div class="solution-box">
-                        <strong>💡 طريقة الحل الاستدلالية:</strong><br>
-                        • في المحول المثالي، تبلغ الكفاءة 100%، مما يعني أن القدرة ثابتة ومحفوظة تماماً في الجانبين.<br>
-                        • إذن: القدرة الثانوية (Ps) تساوي تماماً القدرة الابتدائية وتساوي <strong><mark>${quizDetails.powerVal} واط</mark></strong> دون تغيير.
-                    </div>`;
-            } else if (currentQuizType === "transformer_type") {
-                solutionHTML = `
-                    <div class="solution-box">
-                        <strong>💡 التوضيح والاستدلال العلمي:</strong><br>
-                        • بما أن شدة تيار المخرج ارتفعت، فإنه وعكسياً يجب أن ينخفض الجهد المخرج.<br>
-                        • المحول الذي يخفض الجهد يسمى <strong>محول خافض للجهد (Step-Down)</strong>.
-                    </div>`;
-            } else if (currentQuizType === "series_vin") {
-                solutionHTML = `
-                    <div class="solution-box">
-                        <strong>💡 طريقة الحل الحسابية للتوالي:</strong><br>
-                        • <code>V_in = V_source - V_bulb</code><br>
-                        • <code>V_in = ${quizDetails.source} - ${quizDetails.bulb} = <mark>${quizDetails.vin} فولت</mark></code>.
-                    </div>`;
-            }
-            
-            f.innerHTML = `<span style='color:var(--danger); font-weight:900;'>❌ ${randomWrong}</span> ${solutionHTML}`;
-            triggerAudioEffect(false, randomWrong);
-            
-            document.getElementById('nextQuestionContainer').style.display = "block";
-        }
+        audioGuideBtn.innerHTML = "<span>▶️ استمع للشرح المطور</span>";
+        audioGuideBtn.className = "audio-btn";
     }
+});
 
-    function triggerAudioEffect(isCorrect, textToSpeak) {
-        let cleanText = textToSpeak.replace(/<[^>]*>/g, "");
-        let u = new SpeechSynthesisUtterance(cleanText);
-        u.lang = 'ar-AE'; 
-        u.rate = 0.85; 
-        
+// تفعيل عمل زر التحديث لتوليد أسئلة عشوائية جديدة عند الضغط عليه
+refreshQuizBtn.addEventListener('click', () => {
+    const selectedIndex = presetSelect.value;
+    buildCompletelyRandomQuiz(selectedIndex);
+    // نغمة خفيفة تفيد بتحديث الأسئلة بنجاح
+    try {
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let osc = audioCtx.createOscillator();
         let gain = audioCtx.createGain();
-        osc.frequency.setValueAtTime(isCorrect ? 550 : 180, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.35);
-        
-        window.speechSynthesis.speak(u);
-    }
+        osc.frequency.value = 587.33; // نغمة ناعمة
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+    } catch(e){}
+});
 
-    window.onload = function() {
-        calculateTransformer();
-        drawSimulation();
-        generateQuizQuestion();
-    };
+presetSelect.addEventListener('change', () => {
+    calculateAndDraw();
+});
+
+window.addEventListener('load', () => {
+    populateSelect();
+    calculateAndDraw();
+});
 </script>
 
 </body>
