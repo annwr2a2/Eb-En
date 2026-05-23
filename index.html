@@ -230,6 +230,7 @@
             border-radius: 6px;
             padding: 15px;
             margin-bottom: 20px;
+            text-align: right;
         }
         .quiz-question {
             font-size: 17px;
@@ -260,15 +261,46 @@
             border-color: #94a3b8;
         }
         .option-btn.selected-correct {
-            background: #dcfce7;
-            border-color: #16a34a;
-            color: #14532d;
+            background: #dcfce7 !important;
+            border-color: #16a34a !important;
+            color: #14532d !important;
         }
         .option-btn.selected-wrong {
-            background: #fee2e2;
-            border-color: #dc2626;
-            color: #7f1d1d;
+            background: #fee2e2 !important;
+            border-color: #dc2626 !important;
+            color: #7f1d1d !important;
         }
+        
+        /* تصميم صندوق الحل التفصيلي */
+        .solution-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff1f2;
+            border-right: 4px solid #dc2626;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #991b1b;
+            line-height: 1.7;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .solution-box.correct-mode {
+            background-color: #f0fdf4;
+            border-right-color: #16a34a;
+            color: #14532d;
+        }
+        .solution-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed currentColor;
+            padding-bottom: 5px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .quiz-feedback {
             margin-top: 10px;
             font-size: 18px;
@@ -276,7 +308,6 @@
             min-height: 25px;
         }
         
-        /* تنسيق زر توليد أسئلة جديدة المضاف */
         .refresh-quiz-btn {
             background-color: #16a34a;
             color: white;
@@ -406,11 +437,13 @@
             <div class="quiz-block">
                 <div class="quiz-question" id="q1Text">جاري إعداد صيغة السؤال الأول...</div>
                 <div class="quiz-options" id="q1Options"></div>
+                <div class="solution-box" id="q1Solution"></div>
             </div>
             
             <div class="quiz-block">
                 <div class="quiz-question" id="q2Text">جاري إعداد صيغة السؤال الثاني...</div>
                 <div class="quiz-options" id="q2Options"></div>
+                <div class="solution-box" id="q2Solution"></div>
             </div>
             
             <div class="quiz-feedback" id="quizFeedback"></div>
@@ -468,8 +501,8 @@ const isotopesData = [
 
 let q1CorrectAnswer = null;
 let q2CorrectAnswer = null;
-let q1Selected = null;
-let q2Selected = null;
+let q1SolutionText = "";
+let q2SolutionText = "";
 
 function populateSelect() {
     presetSelect.innerHTML = "";
@@ -584,26 +617,41 @@ function calculateAndDraw() {
 }
 
 function buildCompletelyRandomQuiz(currentDeviceIndex) {
-    q1Selected = null;
-    q2Selected = null;
     document.getElementById('quizFeedback').innerText = "";
+    
+    // إخفاء صناديق الشرح في البداية
+    const solBox1 = document.getElementById('q1Solution');
+    const solBox2 = document.getElementById('q2Solution');
+    solBox1.style.display = "none";
+    solBox2.style.display = "none";
 
+    // --- بناء السؤال الأول ---
     let idx1 = Math.floor(Math.random() * isotopesData.length);
     if(idx1 == currentDeviceIndex) idx1 = (idx1 + 3) % isotopesData.length;
     const randomIso1 = isotopesData[idx1];
     
     let n1 = randomIso1.a - randomIso1.z;
-    let trueEb1 = ((randomIso1.z * mp) + (n1 * mn) - randomIso1.m) * 931.5;
-    if(trueEb1 < 0) trueEb1 = 0;
+    let mConstituents1 = (randomIso1.z * mp) + (n1 * mn);
+    let deltaM1 = mConstituents1 - randomIso1.m;
+    if(deltaM1 < 0) deltaM1 = 0;
+    let trueEb1 = deltaM1 * 931.5;
     
     q1CorrectAnswer = trueEb1.toFixed(2);
     
+    // تجهيز خطوات الحل مفصلة للسؤال الأول بأرقام النواة الحالية
+    q1SolutionText = `
+        1. <strong>عدد النيوترونات (N):</strong> <br>&nbsp;&nbsp;&nbsp; N = A - Z = ${randomIso1.a} - ${randomIso1.z} = <strong>${n1}</strong><br>
+        2. <strong>كتلة المكونات حرة:</strong> <br>&nbsp;&nbsp;&nbsp; (Z &times; m<sub>p</sub>) + (N &times; m<sub>n</sub>) <br>&nbsp;&nbsp;&nbsp; (${randomIso1.z} &times; ${mp}) + (${n1} &times; ${mn}) = <strong>${mConstituents1.toFixed(6)} u</strong><br>
+        3. <strong>النقص في الكتلة (&Delta;m):</strong> <br>&nbsp;&nbsp;&nbsp; كتلة المكونات - الكتلة الفعلية <br>&nbsp;&nbsp;&nbsp; ${mConstituents1.toFixed(6)} - ${randomIso1.m.toFixed(6)} = <strong>${deltaM1.toFixed(6)} u</strong><br>
+        4. <strong>طاقة الربط الكلية (E<sub>b</sub>):</strong> <br>&nbsp;&nbsp;&nbsp; &Delta;m &times; 931.5 <br>&nbsp;&nbsp;&nbsp; ${deltaM1.toFixed(6)} &times; 931.5 = <strong>${q1CorrectAnswer} MeV</strong>
+    `;
+
     let inlineIsotope1 = createInlineIsotopeHTML(randomIso1.a, randomIso1.z, randomIso1.s);
     document.getElementById('q1Text').innerHTML = `❓ <strong>السؤال الأول:</strong> إذا علمت أن الكتلة الفعلية لنواة النظير ${inlineIsotope1} تساوي <strong>${randomIso1.m.toFixed(6)} u</strong>، احسب قيمة <strong>طاقة الربط النووي الإجمالية (E<sub>b</sub>)</strong> لها بوحدة (MeV)؟`;
     
     let q1Options = [
         q1CorrectAnswer,
-        (trueEb1 + 24.4).toFixed(2),
+        (trueEb1 + 12.5).toFixed(2),
         (trueEb1 - 19.2).toFixed(2),
         (trueEb1 * 0.75).toFixed(2)
     ].sort(() => Math.random() - 0.5);
@@ -615,15 +663,27 @@ function buildCompletelyRandomQuiz(currentDeviceIndex) {
         btn.className = "option-btn";
         btn.innerText = opt + " MeV";
         btn.addEventListener('click', () => {
+            // إعادة ضبط ألوان الأزرار في هذا السؤال
             Array.from(q1Container.children).forEach(b => b.className = "option-btn");
-            q1Selected = opt;
-            if(opt === q1CorrectAnswer) btn.className = "option-btn selected-correct";
-            else btn.className = "option-btn selected-wrong";
+            
+            // تطبيق الألوان حسب صحة الإجابة
+            if(opt === q1CorrectAnswer) {
+                btn.className = "option-btn selected-correct";
+                solBox1.className = "solution-box correct-mode";
+                solBox1.innerHTML = `<div class="solution-title">💡 رائع! هذه خطوات حلك الصحيحة:</div>` + q1SolutionText;
+            } else {
+                btn.className = "option-btn selected-wrong";
+                solBox1.className = "solution-box"; // اللون الأحمر هو الافتراضي
+                solBox1.innerHTML = `<div class="solution-title">⚠️ لا تقلق، إليك خطوات الحل الصحيحة لتتعلم منها:</div>` + q1SolutionText;
+            }
+            // إظهار صندوق الشرح
+            solBox1.style.display = "block";
             evaluateSingleQuestion(opt, q1CorrectAnswer);
         });
         q1Container.appendChild(btn);
     });
 
+    // --- بناء السؤال الثاني ---
     let idx2 = Math.floor(Math.random() * isotopesData.length);
     if(idx2 == currentDeviceIndex || idx2 == idx1) idx2 = (idx2 + 4) % isotopesData.length;
     const randomIso2 = isotopesData[idx2];
@@ -635,6 +695,13 @@ function buildCompletelyRandomQuiz(currentDeviceIndex) {
 
     q2CorrectAnswer = trueEbPerA2.toFixed(2);
     
+    // تجهيز خطوات الحل مفصلة للسؤال الثاني بأرقام النواة الحالية
+    q2SolutionText = `
+        1. <strong>القانون:</strong> <br>&nbsp;&nbsp;&nbsp; طاقة الربط لكل نيوكليون = طاقة الربط الإجمالية &divide; العدد الكتلي (A)<br>
+        2. <strong>التعويض:</strong> <br>&nbsp;&nbsp;&nbsp; العدد الكتلي للنواة (A) بناءً على الرمز = <strong>${randomIso2.a}</strong><br>
+        &nbsp;&nbsp;&nbsp; ${trueEb2.toFixed(4)} &divide; ${randomIso2.a} = <strong>${q2CorrectAnswer} MeV/nucleon</strong>
+    `;
+
     let inlineIsotope2 = createInlineIsotopeHTML(randomIso2.a, randomIso2.z, randomIso2.s);
     document.getElementById('q2Text').innerHTML = `❓ <strong>السؤال الثاني:</strong> إذا علمت أن طاقة الربط النووي الكلية لنواة ${inlineIsotope2} تساوي <strong>${trueEb2.toFixed(4)} MeV</strong>، أوجد <strong>طاقة الربط لكل نيوكليون</strong> لها؟`;
     
@@ -652,10 +719,21 @@ function buildCompletelyRandomQuiz(currentDeviceIndex) {
         btn.className = "option-btn";
         btn.innerText = opt + " MeV/nucleon";
         btn.addEventListener('click', () => {
+            // إعادة ضبط ألوان الأزرار في هذا السؤال
             Array.from(q2Container.children).forEach(b => b.className = "option-btn");
-            q2Selected = opt;
-            if(opt === q2CorrectAnswer) btn.className = "option-btn selected-correct";
-            else btn.className = "option-btn selected-wrong";
+            
+            // تطبيق الألوان حسب صحة الإجابة
+            if(opt === q2CorrectAnswer) {
+                btn.className = "option-btn selected-correct";
+                solBox2.className = "solution-box correct-mode";
+                solBox2.innerHTML = `<div class="solution-title">💡 ممتاز! هذه خطوات حلك الصحيحة:</div>` + q2SolutionText;
+            } else {
+                btn.className = "option-btn selected-wrong";
+                solBox2.className = "solution-box"; // اللون الأحمر هو الافتراضي
+                solBox2.innerHTML = `<div class="solution-title">⚠️ لا تقلق، إليك خطوات الحل الصحيحة لتتعلم منها:</div>` + q2SolutionText;
+            }
+            // إظهار صندوق الشرح
+            solBox2.style.display = "block";
             evaluateSingleQuestion(opt, q2CorrectAnswer);
         });
         q2Container.appendChild(btn);
@@ -665,14 +743,14 @@ function buildCompletelyRandomQuiz(currentDeviceIndex) {
 function evaluateSingleQuestion(selected, correct) {
     const feedback = document.getElementById('quizFeedback');
     if (selected === correct) {
-        feedback.innerText = "👏 برافو! إجابة صحيحة وممتازة.";
+        feedback.innerHTML = "👏 برافو! إجابة صحيحة.";
         feedback.style.color = "#16a34a";
         playClapEffect();
         setTimeout(() => { sayFeedbackNatural("برافو! إجابة صحيحة"); }, 200);
     } else {
-        feedback.innerText = "❌ حاول من جديد! راجع الحسابات بدقة.";
+        feedback.innerHTML = "❌ حاول من جديد! راجع الحسابات بدقة.";
         feedback.style.color = "#dc2626";
-        setTimeout(() => { sayFeedbackNatural("حاول من جديد"); }, 200);
+        setTimeout(() => { sayFeedbackNatural("راجع خطوات الحل"); }, 200);
     }
 }
 
@@ -807,16 +885,14 @@ audioGuideBtn.addEventListener('click', () => {
     }
 });
 
-// تفعيل عمل زر التحديث لتوليد أسئلة عشوائية جديدة عند الضغط عليه
 refreshQuizBtn.addEventListener('click', () => {
     const selectedIndex = presetSelect.value;
     buildCompletelyRandomQuiz(selectedIndex);
-    // نغمة خفيفة تفيد بتحديث الأسئلة بنجاح
     try {
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let osc = audioCtx.createOscillator();
         let gain = audioCtx.createGain();
-        osc.frequency.value = 587.33; // نغمة ناعمة
+        osc.frequency.value = 587.33; 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
